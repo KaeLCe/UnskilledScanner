@@ -1,8 +1,5 @@
 package unskilledscanner.ui;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.Scanner;
 
 import unskilledscanner.scanner.UnskilledScanner;
