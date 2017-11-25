@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.util.Scanner"/>
+<fullyQualifiedTypeName name="portscanner.ui.Interface"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.net.Socket"/>
+<fullyQualifiedTypeName name="portscanner.scanner.ScannerPort"/>
+<fullyQualifiedTypeName name="java.net.InetAddress"/>
+<fullyQualifiedTypeName name="java.net.UnknownHostException"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+</qualifiedTypeNameHistroy>

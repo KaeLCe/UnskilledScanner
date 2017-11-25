@@ -1,0 +1,44 @@
+package portscanner.scanner;
+
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ScannerPort {
+	
+	Map<Integer, Boolean> ports;
+	Map<byte[], Boolean> address;
+	Socket socket;
+	
+	public ScannerPort() {
+		this.ports = new HashMap<Integer, Boolean>();
+		this.address = new HashMap<byte[], Boolean>();
+	}
+	
+	public void scanPorts(String address, int portDeb, int portFin) {
+		for (; portDeb <= portFin; portDeb++) {
+			try{
+				socket = new Socket(address, portDeb);
+				System.out.println("Port ouvert : " + portDeb);
+				this.ports.put(portDeb, true);
+			}catch(Exception e) {
+				System.out.println("Erreur sur le port " + portDeb);
+				this.ports.put(portDeb, false);
+			}
+		}
+	}
+	
+	public void scanLocalNetwork(byte[] ip) {
+		for (int i = 1; i < 255; i++) {
+			ip[3] = (byte)i;
+			try {
+				InetAddress addr = InetAddress.getByAddress(ip);
+				
+			}catch(Exception e) {
+				
+			}
+		}
+	}
+	
+}

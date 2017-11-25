@@ -1,0 +1,27 @@
+package portscanner.scanner;
+
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ScannerPort {
+	
+	Map<Integer, Boolean> ports;
+	Socket socket;
+	
+	public ScannerPort() {
+		this.ports = new HashMap<Integer, Boolean>();
+	}
+	
+	public void scan(String address, int portDeb, int portFin) {
+		for (; portDeb <= portFin; portDeb++) {
+			try{
+				socket = new Socket(address, portDeb);
+				System.out.println("Port ouvert : " + portDeb);
+			}catch(Exception e) {
+				System.out.println("Erreur sur le port " + portDeb);
+			}
+		}
+	}
+	
+}

@@ -1,0 +1,1324 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+
+<channel>
+	<title>Planet Eclipse</title>
+	<link>http://planeteclipse.org/planet/</link>
+	<language>en</language>
+	<description>Planet Eclipse - http://planeteclipse.org/planet/</description>
+
+<item>
+	<title>Maximilian and Jonas: EMF Forms 1.14.0 Feature: Enhanced Input Validation</title>
+	<guid isPermaLink="false">https://eclipsesource.com/?p=36372</guid>
+	<link>https://eclipsesource.com/blogs/2017/11/23/emf-forms-1-14-0-feature-enhanced-input-validation/</link>
+	<description>&lt;p&gt;&lt;a href=&quot;https://www.eclipse.org/ecp/emfforms/&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;EMF Forms&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt; makes it simple to create forms which edit your data based on an EMF model. To get started with EMF Forms please refer to &lt;/span&gt;&lt;a href=&quot;http://eclipsesource.com/blogs/tutorials/getting-started-with-EMF-Forms/&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;our tutorial&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;. In this post, we would like to outline a new feature in the 1.13.0 release: The extended input validation. With this, you can forbid illegal values from being entered into a form and can support the user, with live validation while entering data.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;One of the advantages of using EMF Forms has always been that it provides validation features straight out of the box. For the validation, EMF Forms mainly relies on the underlying data model. As an example, the following data model defines two mandatory attributes (lastName and email).&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;alignnone wp-image-36373 size-full&quot; height=&quot;92&quot; src=&quot;https://eclipsesource.com/wp-content/uploads/2017/11/image21.png&quot; width=&quot;191&quot; /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;In the rendered UI, those fields are automatically marked as mandatory (by default with an “*”) and a validation error is shown if the fields are not filled out.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;alignnone wp-image-36374 size-full&quot; height=&quot;104&quot; src=&quot;https://eclipsesource.com/wp-content/uploads/2017/11/image31.png&quot; width=&quot;320&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;By adding custom data types, EMF also allows you to define more complex constraints. As an example, we might want to confirm whether the Email field contains a valid email address. Therefore we would define a corresponding data type inherited from String, which defines an additional pattern (see below).&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;alignnone wp-image-36375 size-full&quot; height=&quot;67&quot; src=&quot;https://eclipsesource.com/wp-content/uploads/2017/11/image22.png&quot; width=&quot;417&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;As EMF generated validators also for those patterns, EMF Forms would validate this constraint, too. The following screenshot shows how an invalid email address, which does not correspond with this pattern, would trigger a validation error in the UI.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;alignnone wp-image-36376 size-full&quot; height=&quot;102&quot; src=&quot;https://eclipsesource.com/wp-content/uploads/2017/11/image15.png&quot; width=&quot;375&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;As you can see, EMF Forms completely facilitates all constraints given in the model. This is very useful because it avoids duplicate specification of those constraints within the UI code. &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;However, in the current scenario, it would first allow the user to enter invalid Strings. This is because the validation is currently only triggered when the data binding is triggered. Therefore, if you would like a control which only allows entering legal characters, you would have to create a custom control and deal with “verify listeners”. At least until EMF Forms 1.14.0, which now also supports this out of the box!&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;The solution is very simple, all default controls use a verify listener to validate input immediately. To keep the separation of the actual validation constraints from the UI code, the verify listener calls a service, called “PreSetValidationService”. This occurs before any character is accepted into the control, therefore, this mechanism efficiently allows you to restrict the user’s input. Of course, you can implement the PreSetValidation service however you’d like, but EMF Forms ships a default implementation, which you can simply add to your run configuration:&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;alignnone wp-image-36377 size-full&quot; height=&quot;49&quot; src=&quot;https://eclipsesource.com/wp-content/uploads/2017/11/image6.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;The default implementation validates any input against the defined data type in the EMF model. That means, if you already have defined the expected input in your model (e.g. by using regex pattern), you literally do not need to do anything on the UI site anymore. The default controls will no longer allow the input of any illegal values.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;While this works great for many simple data types (e.g. Strings with limited allowed characters), it fails for more complex constraints. In the example above, we have defined a regex for a valid email address. If we would validate this for every character that the user enters, we would actually not allow the user to enter anything, because it is not possible to enter a valid email address with only one keystroke (except copy paste). Still we would like to restrict the characters, which can be entered to the legal once.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;To solve this issue, the EMF Forms “PreSetValidationService” will optionally validate against a second pattern, which defines a less strict constraint. The key in the Ecore model for this is “loosePattern”. If you specify “loosePattern”, the key entries in the respective field, will be validated against this. However, the regular pattern will still be validated with only message. The following example specifies a “loosePattern” for the Email example:&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;alignnone wp-image-36378 size-full&quot; height=&quot;89&quot; src=&quot;https://eclipsesource.com/wp-content/uploads/2017/11/image19.png&quot; width=&quot;399&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;The nice thing about having the attribute constraints directly in the model is that you can reuse them at any place in your system. As an example, you can validate input values retrieved from an external service. In a different example, there might be another place in your application where you allow the user to enter this value. The following screenshot shows the same attribute “Email” in a table. Since the EMF Forms cell renderer is using the same validation service, the defined constraints are automatically valid.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;alignnone wp-image-36379 size-full&quot; height=&quot;84&quot; src=&quot;https://eclipsesource.com/wp-content/uploads/2017/11/image26.png&quot; width=&quot;435&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;In a third example, you might also consider Copy/Paste. The default Copy/Paste feature of EMF Forms validates values, before they get pasted. Therefore, users cannot even past illegal values into tables (as shown below).&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;&quot; class=&quot;alignnone wp-image-36380 size-full&quot; height=&quot;308&quot; src=&quot;https://eclipsesource.com/wp-content/uploads/2017/11/image10.png&quot; width=&quot;630&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;As for all EMF Forms features, the new validation service is of course adaptable to custom requirements. If there are any features you miss or ways you wish to adapt it, please provide feedback by &lt;/span&gt;&lt;a href=&quot;https://bugs.eclipse.org/bugs/enter_bug.cgi?product=ecp&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;submitting bugs or feature requests&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt; or &lt;/span&gt;&lt;a href=&quot;mailto:munich@eclipsesource.com&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;contact us&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt; if you are interested in enhancements or support.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The post &lt;a href=&quot;https://eclipsesource.com/blogs/2017/11/23/emf-forms-1-14-0-feature-enhanced-input-validation/&quot; rel=&quot;nofollow&quot;&gt;EMF Forms 1.14.0 Feature: Enhanced Input Validation&lt;/a&gt; appeared first on &lt;a href=&quot;https://eclipsesource.com&quot; rel=&quot;nofollow&quot;&gt;EclipseSource&lt;/a&gt;.&lt;/p&gt;</description>
+	<pubDate>Thu, 23 Nov 2017 15:14:35 +0000</pubDate>
+</item>
+<item>
+	<title>Maximilian and Jonas: Modeling Symposium at EclipseCon Europe 2017 – Slides</title>
+	<guid isPermaLink="false">https://eclipsesource.com/?p=36358</guid>
+	<link>https://eclipsesource.com/blogs/2017/11/23/modeling-symposium-eclipsecon-europe-2017-slides/</link>
+	<description>&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Thanks for attending the modeling symposium at EclipseCon Europe 2017, thank you for the positive feedback and thanks to all the speakers.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Some of the presenters have shared their slide with me, which can be found here:&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.slideshare.net/secret/JnioD7freBHUrP&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Lorenzo Bettini – Edelta &lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://inf.mit.bme.hu/sites/default/files/related/2017-11/EclipseCon2017_Gamma_final.pdf&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;András Vörös – &lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Gamma Statechart Composition Framework: Design and verification of component-based reactive systems&lt;/span&gt; &lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.openregtech.com/eclipsecon.pptx&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Neil MacKenzie – RCP Modelling Applications on the Web&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.eclipsecon.org/europe2017/session/understand-complex-emf-models-expert&quot;&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Zakir Hussain Meer &amp;amp; Harald Mackamul Understand complex EMF models expert&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;The post &lt;a href=&quot;https://eclipsesource.com/blogs/2017/11/23/modeling-symposium-eclipsecon-europe-2017-slides/&quot; rel=&quot;nofollow&quot;&gt;Modeling Symposium at EclipseCon Europe 2017 – Slides&lt;/a&gt; appeared first on &lt;a href=&quot;https://eclipsesource.com&quot; rel=&quot;nofollow&quot;&gt;EclipseSource&lt;/a&gt;.&lt;/p&gt;</description>
+	<pubDate>Thu, 23 Nov 2017 11:01:42 +0000</pubDate>
+</item>
+<item>
+	<title>Eclipse Announcements: Eclipse Newsletter | Location Matters</title>
+	<guid isPermaLink="true">http://feedproxy.google.com/~r/eclipse/fnews/~3/iV5OhT_Exxg/</guid>
+	<link>http://feedproxy.google.com/~r/eclipse/fnews/~3/iV5OhT_Exxg/</link>
+	<description>This newsletter is everything geospacial (LocationTech) + a featured article about creating video games.&lt;img alt=&quot;&quot; height=&quot;1&quot; src=&quot;http://feeds.feedburner.com/~r/eclipse/fnews/~4/iV5OhT_Exxg&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Wed, 22 Nov 2017 11:23:00 +0000</pubDate>
+</item>
+<item>
+	<title>JBoss Tools Team: JBoss Tools 4.5.2.AM1 for Eclipse Oxygen.1a</title>
+	<guid isPermaLink="true">https://tools.jboss.org/blog/4.5.2.am1-for-oxygen.1a.html</guid>
+	<link>https://tools.jboss.org/blog/4.5.2.am1-for-oxygen.1a.html</link>
+	<description>&lt;div&gt;&lt;div id=&quot;preamble&quot;&gt;
+      &lt;div class=&quot;sectionbody&quot;&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Happy to announce 4.5.2.AM1 (Developer Milestone 1) build for Eclipse Oxygen.1a.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Downloads available at &lt;a href=&quot;https://tools.jboss.org/downloads/jbosstools/oxygen/4.5.2.AM1.html&quot;&gt;JBoss Tools 4.5.2 AM1&lt;/a&gt;.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect1&quot;&gt;
+      &lt;h2 id=&quot;what-is-new&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#what-is-new&quot;&gt;&lt;/a&gt;What is New?&lt;/h2&gt;
+      &lt;div class=&quot;sectionbody&quot;&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Full info is at &lt;a href=&quot;https://tools.jboss.org/documentation/whatsnew/jbosstools/4.5.2.AM1.html&quot;&gt;this page&lt;/a&gt;. Some highlights are below.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect2&quot;&gt;
+      &lt;h3 id=&quot;openshift&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#openshift&quot;&gt;&lt;/a&gt;OpenShift&lt;/h3&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;support-for-route-timeouts-and-liveness-probe-for-openshift-server-adapter-debugging-configurations&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#support-for-route-timeouts-and-liveness-probe-for-openshift-server-adapter-debugging-configurations&quot;&gt;&lt;/a&gt;Support for route timeouts and liveness probe for OpenShift Server Adapter debugging configurations&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;While debugging your OpenShift deployment, you may face two different issues:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;if you launch your test through a Web browser, then it’s likely that you will access your OpenShift deployment through an OpenShift
+      route. The problem is that, by default, OpenShift routes have a 30 seconds timeout for each request. So if you’re stepping through one
+      of your breakpoints, you will get a timeout error message in the browser window even if you can still debug your OpenShift deployment.
+      And you’re now stuck will the navigation of your OpenShift application.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;p&gt;if your OpenShift deployment has a liveness probe configured, depending on your virtual machine capabilities or how your debugger is
+      configured, if your stepping into one of your breakpoints, the liveness probe may fail thus OpenShift so OpenShift will restart your
+      container and your debugging session will be destroyed.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;So, from now, when the OpenShift server adapter is started in &lt;code&gt;debug&lt;/code&gt; mode, the following action are being performed:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;if an OpenShift route is found that is linked to the OpenShift deployment you want to debug, the route timeout will be
+      set or increased to 1 hour. The original or default value will be restored when the OpenShift server adapter will be restarted
+      in &lt;code&gt;run&lt;/code&gt; mode.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;p&gt;if your OpenShift deployment has a liveness probe configured, the &lt;code&gt;initialDelay&lt;/code&gt; field will be increased to 1 hour if the defined
+      value for this field is lower than 1 hour. If the value of this field is defined to a value greater than 1 hour, it is left intact.
+      The original value will be restored when the OpenShift server adapter will be restarted
+      in &lt;code&gt;run&lt;/code&gt; mode&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect2&quot;&gt;
+      &lt;h3 id=&quot;fuse-tooling&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#fuse-tooling&quot;&gt;&lt;/a&gt;Fuse Tooling&lt;/h3&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;camel-context-parameters-configurable-in-properties-view-for-camel-version-2-18&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#camel-context-parameters-configurable-in-properties-view-for-camel-version-2-18&quot;&gt;&lt;/a&gt;Camel context parameters configurable in properties view for Camel version &amp;lt; 2.18&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Before Camel 2.18, the Camel catalog is missing information about Camel Context. Fuse Tooling is now providing this missing piece of information and thus allow to edit Camel Context parameters in Properties view like for any other component. It is activated when there is no element selected on the diagram.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;Parameters in Properties view for Camel context&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/fusetools/images/camelContextPropertiesView.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;usability-improvement-progress-bar-when-changing-the-camel-version&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#usability-improvement-progress-bar-when-changing-the-camel-version&quot;&gt;&lt;/a&gt;Usability improvement: Progress bar when &quot;Changing the Camel version&quot;&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Since Fuse Tooling 10.1.0, it is possible to change the Camel version. In case the Camel version was not cached locally yet and for slow internet connections, this operation can take a while. There is now a progress bar to see the progress.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;Switch Camel Version with Progress Bar&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/fusetools/images/switchCamelVersionWithProgressBar.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Enjoy!&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Jeff Maury&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;&lt;/div&gt;</description>
+	<pubDate>Wed, 22 Nov 2017 08:55:38 +0000</pubDate>
+</item>
+<item>
+	<title>Mike Milinkovich: EE4J Progress: Nine New Projects Proposed at the Eclipse Foundation</title>
+	<guid isPermaLink="false">http://mmilinkov.wordpress.com/?p=1414</guid>
+	<link>https://mmilinkov.wordpress.com/2017/11/21/ee4j-progress-nine-new-projects-proposed-at-the-eclipse-foundation/</link>
+	<description>&lt;p&gt;I am very pleased to announce that the first nine project proposals for the Eclipse Enterprise for Java (EE4J) top-level project have been &lt;a href=&quot;https://www.eclipse.org/projects/project_activity.php&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;formally published for community review&lt;/a&gt;. This is the first step to making the migration of Java EE to the Eclipse Foundation a reality.&lt;/p&gt;
+&lt;p&gt;The process of migrating the &lt;a href=&quot;https://www.eclipse.org/eclipselink/&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;EclipseLink&lt;/a&gt; (JPA) and &lt;a href=&quot;https://projects.eclipse.org/projects/rt.yasson&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;Eclipse Yasson&lt;/a&gt; (JSON-B) projects to EE4J is also underway.&lt;/p&gt;
+&lt;p&gt;We look forward to feedback from the community on these proposals!&lt;/p&gt;
+&lt;h2&gt;&lt;b&gt;EE4J Project Proposals&lt;/b&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse Grizzly&lt;/strong&gt;&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage: Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link:&lt;/span&gt;&lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-grizzly&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt; https://projects.eclipse.org/proposals/eclipse-grizzly&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: Writing scalable server applications in the Java&lt;img alt=&quot;™&quot; class=&quot;wp-smiley&quot; src=&quot;https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/72x72/2122.png&quot; style=&quot;height: 1em;&quot; /&gt; programming language has always been difficult. Before the advent of the Java New I/O API (NIO), thread management issues made it impossible for a server to scale to thousands of users. The Eclipse Grizzly NIO framework has been designed to help developers to take advantage of the Java&lt;img alt=&quot;™&quot; class=&quot;wp-smiley&quot; src=&quot;https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/72x72/2122.png&quot; style=&quot;height: 1em;&quot; /&gt; NIO API.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse OpenMQ&lt;/strong&gt;&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage: Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link: &lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-openmq&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://projects.eclipse.org/proposals/eclipse-openmq&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: Eclipse Open Message Queue (OpenMQ) is a complete message-oriented middleware platform, offering high quality, enterprise-ready messaging.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;OpenMQ is included in GlassFish.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse Mojarra&lt;/strong&gt;&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage: Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link:  &lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-mojarra&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://projects.eclipse.org/proposals/eclipse-mojarra&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: Eclipse Mojarra is the Reference Implementation for the JavaServer Faces specification (JSR-372). JavaServer Faces (JSF) is a Java specification for building component-based user interfaces for web applications. It is also a MVC web framework that simplifies construction of user interfaces (UI) for server-based applications by using reusable UI components in a page.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Mojarra is included in GlassFish.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse Message Service API for Java&lt;/strong&gt; (JSR-914)&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage:  Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link: &lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-message-service-api-java&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://projects.eclipse.org/proposals/eclipse-message-service-api-java&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: JSR- 914: The Java Message Service (JMS) API is a Java Message Oriented Middleware API for sending messages between two or more clients. It is an implementation to handle the Producer-consumer problem.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse Tyrus&lt;/strong&gt;&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage: Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link: &lt;/span&gt;&lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-tyrus&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://projects.eclipse.org/proposals/eclipse-tyrus&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: Eclipse Tyrus provides a reference implementation for Java API for WebSocket, starting from the specification defined by JSR-356.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse Java API for RESTful Web Services&lt;/strong&gt; (JAX-RS)&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage: Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link: &lt;/span&gt;&lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-restful-web-services-api-java&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://projects.eclipse.org/proposals/eclipse-restful-web-services-api-java&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: JAX-RS: Java API for RESTful Web Services (JAX-RS) is a Java programming language API spec that provides support in creating web services according to the Representational State Transfer (REST) architectural pattern.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse Jersey&lt;br /&gt;
+&lt;/strong&gt;&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage: Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link:&lt;/span&gt;&lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-jersey&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://projects.eclipse.org/proposals/eclipse-jersey&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: Eclipse Jersey is a REST framework that provides JAX-RS (JSR-339) Reference Implementation and more. Jersey provides its own APIs that extend the JAX-RS toolkit with additional features and utilities to further simplify RESTful service and client development. Jersey also exposes numerous extension SPIs so that developers may extend Jersey to best suit their needs.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse WebSocket API for Java&lt;/strong&gt; (JSR-356)&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage: Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link: &lt;/span&gt;&lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-websocket-api-java&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://projects.eclipse.org/proposals/eclipse-websocket-api-java&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: Java API for WebSocket (JSR-356), specifies the API that Java developers can use when they want to integrate WebSockets into their applications – both on the server side as well as on the Java client side.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Name: &lt;strong&gt;Eclipse JSON Processing&lt;/strong&gt;&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Top-Level Project: EE4J&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Stage: Community Review&lt;br /&gt;
+&lt;/span&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Project Link: &lt;/span&gt;&lt;a href=&quot;https://projects.eclipse.org/proposals/eclipse-json-processing&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://projects.eclipse.org/proposals/eclipse-json-processing&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span style=&quot;font-weight: 400;&quot;&gt;Description: Eclipse JSON Processing (JSON-P) is a Java API to process (e.g. parse, generate, transform and query) JSON documents. It produces and consumes JSON in a streaming fashion (similar to StAX API for XML) and allows to build a Java object model for JSON using API classes (similar to DOM API for XML).&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;&lt;br /&gt;Filed under: &lt;a href=&quot;https://mmilinkov.wordpress.com/category/foundation/&quot;&gt;Foundation&lt;/a&gt;  &lt;a href=&quot;http://feeds.wordpress.com/1.0/gocomments/mmilinkov.wordpress.com/1414/&quot; rel=&quot;nofollow&quot;&gt;&lt;img alt=&quot;&quot; border=&quot;0&quot; src=&quot;http://feeds.wordpress.com/1.0/comments/mmilinkov.wordpress.com/1414/&quot; /&gt;&lt;/a&gt; &lt;img alt=&quot;&quot; border=&quot;0&quot; height=&quot;1&quot; src=&quot;https://pixel.wp.com/b.gif?host=mmilinkov.wordpress.com&amp;amp;blog=19461799&amp;amp;post=1414&amp;amp;subd=mmilinkov&amp;amp;ref=&amp;amp;feed=1&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Tue, 21 Nov 2017 16:31:57 +0000</pubDate>
+</item>
+<item>
+	<title>Kichwa Coders: The Eclipse Debug Perspective just got a lot better</title>
+	<guid isPermaLink="false">http://kichwacoders.com/?p=3270</guid>
+	<link>https://kichwacoders.com/2017/11/21/the-eclipse-debug-perspective-just-got-a-lot-better/</link>
+	<description>&lt;p&gt;&lt;strong&gt;A Debug Menu!&lt;/strong&gt;&lt;br /&gt;
+The next major release of Eclipse (4.8 aka Photon) due in June 2018 has a small – but significant – new feature. The next version will have a &lt;strong&gt;Debug&lt;/strong&gt; menu!&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;DebugMenu&quot; class=&quot;alignnone size-full wp-image-3271&quot; src=&quot;https://kichwacoders.files.wordpress.com/2017/11/debugmenu.png?w=525&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;This improves things in two ways:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;No more going to awkwardly names Run menu when you want to Debug&lt;/li&gt;
+&lt;li&gt;A less full Run menu as the sometimes overlong Run menu is now split into two distinct and logical parts.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Better Default Layout in Debug Perspective&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;The first thing I do whenever I create a new workspace is change to the Debug Perspective and do most of my work in that perspective, rarely changing to other perspectives. I re-position the views in the perspective in my own special way, or so I thought until I found out that lots of other developers also prefer roughly the same layout as I have. The new default layout gives more place to the editor and more vertical space to the Debug view (the one with the stack traces).&lt;/p&gt;
+&lt;p&gt;Here is what the new layout looks like with a few additional views open:&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&quot;debug_extra_opened_views&quot; class=&quot;alignnone size-full wp-image-3273&quot; src=&quot;https://kichwacoders.files.wordpress.com/2017/11/debug_extra_opened_views.png?w=525&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;So what?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;“So what?” I hear you say, “these are small changes, not earth shattering new features.” Changes like this are a big deal, thanks to the &lt;a href=&quot;https://kichwacoders.com/2017/05/17/what-can-eclipse-developers-learn-from-team-skys-aggregation-of-marginal-gains/&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;marginal gains principle&lt;/a&gt;. Eclipse has been a very stable top class IDE for years, but you may have noticed that things haven’t been changing as much in the last number of years. Part of this is down to it being a great IDE already, but other stuff is at play here. Making fundamental changes like the default layout to probably the most commonly used perspective and changing the top level debug menu is a sign that the Eclipse community is alive and well, that the ideas are still coming in. But it also means that the leaders in the community are open to change and evolution. If we don’t evolve we die.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;What this means for extenders and plug-in writers?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If you, like me, are developing and extending Eclipse there is some impact on you to. For example, if you are contributing a clearly debug related task to the Run menu, you probably want to start contributing it to the Debug menu going forward. Both so your users can find it and so it does not stand out as being in the wrong place. You probably also want to consider the default opening location for any additional views you provide to the Debug perspective to ensure they pop-up in the logical place.&lt;/p&gt;
+&lt;p&gt;Of course it goes further than this. You should also take a step back and consider how your tools work. Perhaps it is time to do a &lt;a href=&quot;https://kichwacoders.com/2014/01/17/lean-design-critique-function-fitting-tool/&quot;&gt;Lean Design Critique?&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Can’t wait until June?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If you can’t wait until June to get a hold of these improvements, you can pick them up in the latest nightly build, or wait until the Photon M4 milestone build in a few weeks. You can download the full packages from &lt;a href=&quot;https://www.eclipse.org/downloads/index-developer.php&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://www.eclipse.org/downloads/index-developer.php&lt;/a&gt; or the Eclipse Platform/SDK on its own from &lt;a href=&quot;http://download.eclipse.org/eclipse/downloads/&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;http://download.eclipse.org/eclipse/downloads/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Thanks!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Finally thank you to the Eclipse Platform committers and contributors who are taking the bold steps to change and evolve. A particular thanks to Andrey Loskutov, from whom I borrowed the screenshots from (via Bug 464898 and Bug 513355), see Andrey announcement on the Eclipse mailing list: &lt;a href=&quot;https://dev.eclipse.org/mhonarc/lists/cross-project-issues-dev/msg14986.html&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://dev.eclipse.org/mhonarc/lists/cross-project-issues-dev/msg14986.html&lt;/a&gt;&lt;/p&gt;&lt;br /&gt;  &lt;a href=&quot;http://feeds.wordpress.com/1.0/gocomments/kichwacoders.wordpress.com/3270/&quot; rel=&quot;nofollow&quot;&gt;&lt;img alt=&quot;&quot; border=&quot;0&quot; src=&quot;http://feeds.wordpress.com/1.0/comments/kichwacoders.wordpress.com/3270/&quot; /&gt;&lt;/a&gt; &lt;img alt=&quot;&quot; border=&quot;0&quot; height=&quot;1&quot; src=&quot;https://pixel.wp.com/b.gif?host=kichwacoders.com&amp;amp;blog=68353182&amp;amp;post=3270&amp;amp;subd=kichwacoders&amp;amp;ref=&amp;amp;feed=1&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Tue, 21 Nov 2017 12:40:23 +0000</pubDate>
+</item>
+<item>
+	<title>Kichwa Coders: Beware diversity-led marketing (&amp; three cheers for these companies doing diversity right)</title>
+	<guid isPermaLink="false">http://kichwacoders.com/?p=3189</guid>
+	<link>https://kichwacoders.com/2017/11/17/beware-diversity-led-marketing-three-cheers-for-these-companies-doing-diversity-right/</link>
+	<description>&lt;p&gt;&lt;img alt=&quot;IMG_20171025_133846&quot; class=&quot;alignnone size-full wp-image-3251&quot; src=&quot;https://kichwacoders.files.wordpress.com/2017/11/img_20171025_133846.jpg?w=525&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;There’s an increased level of discussion on improving diversity in tech communities. Or maybe it was always there and I just started paying attention. Either way, it’s a really good thing. But in the mix there is definitely a certain amount of diversity-led marketing e.g “We need more women-in-tech! Women, sign up for this tech course here…”.  Some are more obvious than others.&lt;/p&gt;
+&lt;p&gt;What about tech conferences? Take the case of a tech conference getting some promotion off the back of free diversity tickets. Is that just diversity-led marketing and a bad thing? After all it’s great to get underrepresented folks into conferences, right? The answer is if it is done &lt;strong&gt;in isolation&lt;/strong&gt; then it is probably just self-serving marketing and pr. Underrepresented folks aren’t merely props for your agenda&lt;/p&gt;
+&lt;p&gt;Diversity is complicated. It’s easy to get it wrong and end up like &lt;a href=&quot;https://medium.com/@peggyrayzis/why-i-cancelled-my-reactiveconf-talk-3a463bf14bd8&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;the conference organizers who violated their own code-of-conduct and had a speaker cancel their talk&lt;/a&gt;.  Or fall into the Google case of  trying to &lt;a href=&quot;https://blog.google/products/google-play/wonder-woman-partnership/&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;inspire teen girls to code&lt;/a&gt; while simultaneously &lt;a href=&quot;https://www.theguardian.com/technology/2017/sep/14/google-women-promotions-lower-paying-jobs-lawsuit&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;systematically limiting the careers of women in your company&lt;/a&gt;.  Again diversity is complicated, so we all want to focus our energies on those doing it the right way.&lt;/p&gt;
+&lt;p&gt;Open source has a &lt;a href=&quot;https://opensource.com/article/17/1/take-action-diversity-tech&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;worse record&lt;/a&gt; than most when it comes to diversity.  At this year’s Eclipsecon Europe, as with every tech conference I attend, I did my own evaluation of what’s being done well and not so well. This year, I noticed a few companies who are doing something right as evidenced by the women and underrepresented minorities that are in leadership positions.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;IBM&lt;/strong&gt; – IBM had a noticeably improved presence at this year’s conference. I learnt that they actively encouraged speaker proposals. If a talk is accepted, there are good company policies in place to ensure speakers can travel and attend the conferences. As a result we had four awesome women speakers from IBM, not just any speakers, but experts in their respective fields: Eclipse JDT leads Noopur Gupta and Sarika Sinha, Eclipse SWT committer Lakshmi Shanmugam and Eclipse Microprofile committer Emily Jiang.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OBEO&lt;/strong&gt; – &lt;a href=&quot;https://www.obeo.fr/en/&quot;&gt;OBEO&lt;/a&gt; specialize in graphical modelling and are well respected in the community. Melanie Bats is one of the rockstars in the community, doing terrific and &lt;a href=&quot;https://twitter.com/melaniebats/status/575827052168876032&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;imaginitive&lt;/a&gt; tech talks and also recently took over as the Eclipse Planning council lead. OBEO recently promoted Melanie to CTO, which is written about beautifully here: &lt;a href=&quot;http://melb.enix.org/2017/09/19/zero-to-cto/&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;Zero-to-CTO&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BREDEX – &lt;/strong&gt;BREDEX specialize in testing and are well represented at EclipseCon by the indefatigable Alex Schladebeck. Alex can be found leading the highly enjoyable Kahoot quiz at EclipseCon as well as heading up the Project Quality day. Doing great things in the testing world, it was great to learn that Alex has been promoted to  ‘Head of Software Quality and Test Consulting’ at BREDEX.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;embed-twitter&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot;&gt;
+&lt;p dir=&quot;ltr&quot; lang=&quot;und&quot;&gt;&lt;a href=&quot;https://twitter.com/hashtag/IBMers?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#IBMers&lt;/a&gt; at &lt;a href=&quot;https://twitter.com/hashtag/EclipseCon?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#EclipseCon&lt;/a&gt; &lt;a href=&quot;https://t.co/yJxsZPDrwu&quot;&gt;pic.twitter.com/yJxsZPDrwu&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;— Noopur Gupta (@noopur2507) &lt;a href=&quot;https://twitter.com/noopur2507/status/924767736147746816?ref_src=twsrc%5Etfw&quot;&gt;October 29, 2017&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;
+&lt;p&gt;These three companies set a great example for the rest of us, not to mention make us better at our work as a community. Which brings me to the picture at the top of this blog post. I like to get setup really early before I do a tech talk, especially one in a huge room with a massive screen. So while getting setup, Jonah Graham of Kichwa Coders and Sarika Sinha of IBM got into a discussion about debugger protocols and threading issues. To discuss the finer points my laptop was commandeered and out came the code. It was one of those serendipitous moments and I didn’t want my pre-talk nerves to stop them. So I took a seat and took pictures while taking deep breaths. I think &lt;a href=&quot;https://youtu.be/005acFgnOws&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;my talk went well&lt;/a&gt; anyway. That one conversation really informed our thinking on our work on &lt;a href=&quot;https://kichwacoders.com/2017/11/14/debug-protocol-coming-soon-to-an-ide-near-you/&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;the future of debuggers&lt;/a&gt;. And really it reminded me in a powerful way how things are always better the more different types of people you get involved. And little moments like these make it all worthwhile, and worth doing right, in the best way possible.&lt;/p&gt;&lt;br /&gt;  &lt;a href=&quot;http://feeds.wordpress.com/1.0/gocomments/kichwacoders.wordpress.com/3189/&quot; rel=&quot;nofollow&quot;&gt;&lt;img alt=&quot;&quot; border=&quot;0&quot; src=&quot;http://feeds.wordpress.com/1.0/comments/kichwacoders.wordpress.com/3189/&quot; /&gt;&lt;/a&gt; &lt;img alt=&quot;&quot; border=&quot;0&quot; height=&quot;1&quot; src=&quot;https://pixel.wp.com/b.gif?host=kichwacoders.com&amp;amp;blog=68353182&amp;amp;post=3189&amp;amp;subd=kichwacoders&amp;amp;ref=&amp;amp;feed=1&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Fri, 17 Nov 2017 11:10:49 +0000</pubDate>
+</item>
+<item>
+	<title>Donald Raab: Preposition Preference</title>
+	<guid isPermaLink="false">https://medium.com/p/1f1c709b098b</guid>
+	<link>https://medium.com/@donraab/preposition-preference-1f1c709b098b?source=rss-df39b86e9f04------2</link>
+	<description>&lt;p&gt;What’s up? A preposition.&lt;/p&gt;&lt;figure&gt;&lt;img alt=&quot;&quot; src=&quot;https://cdn-images-1.medium.com/max/1024/1*TuvUzb7iICZLWUWbi1-xkQ.jpeg&quot; /&gt;Photo taken at Grounds for Sculpture in Hamilton, NJ&lt;/figure&gt;&lt;p&gt;A friend of mine at Rutgers University would always respond to the question “What’s up?” with the consistent witty response: “A preposition.” I fell into this trap far too many times.&lt;/p&gt;&lt;h3&gt;Have you ever thought about how much we use prepositions in our Java APIs?&lt;/h3&gt;&lt;p&gt;We use several different prepositions in APIs in &lt;a href=&quot;https://github.com/eclipse/eclipse-collections&quot;&gt;Eclipse Collections&lt;/a&gt;. Each one conveys a different meaning. Some prepositions that appear in Eclipse Collections multiple times are “with, of, by, as, to, from, into”. When we use a preposition in an API, it should help convey meaning clearly. If it doesn’t, then we would have been better off without it.&lt;/p&gt;&lt;h4&gt;Two prepositions enter. One preposition leaves.&lt;/h4&gt;&lt;p&gt;At JavaOne this year, I described a battle we once had between two prepositions for naming our collection factory methods in the &lt;a href=&quot;https://github.com/eclipse/eclipse-collections&quot;&gt;Eclipse Collections&lt;/a&gt; API. The battle was between &lt;strong&gt;&lt;em&gt;of&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;with&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;&lt;pre&gt;MutableList&amp;lt;String&amp;gt; list = Lists.mutable.&lt;strong&gt;of&lt;/strong&gt;(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;);&lt;/pre&gt;&lt;pre&gt;&lt;strong&gt;&lt;em&gt;                           vs.&lt;/em&gt;&lt;/strong&gt;&lt;/pre&gt;&lt;pre&gt;MutableList&amp;lt;String&amp;gt; list = Lists.mutable.&lt;strong&gt;with&lt;/strong&gt;(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;);&lt;/pre&gt;&lt;p&gt;After an intense debate, we wound up with both options for our collection factory classes. We thought this was one place where we could provide multiple options to allow developers to use their own preference. This however was not the end of the story. Sometimes there is more than just a single battle to be won.&lt;/p&gt;&lt;p&gt;The prepositions &lt;strong&gt;&lt;em&gt;of&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;with&lt;/em&gt;&lt;/strong&gt; both work well for naming factory methods for creating collections. I personally prefer &lt;strong&gt;&lt;em&gt;with&lt;/em&gt;&lt;/strong&gt;, mostly because this is what was used with Smalltalk. In Smalltalk, I would regularly write the following:&lt;/p&gt;&lt;pre&gt;|set|&lt;br /&gt;set := Set &lt;strong&gt;with&lt;/strong&gt;: ‘1’ &lt;strong&gt;with&lt;/strong&gt;: ‘2’ &lt;strong&gt;with&lt;/strong&gt;: ‘3’.&lt;/pre&gt;&lt;p&gt;The following is the equivalent using Java with Eclipse Collections.&lt;/p&gt;&lt;pre&gt;MutableSet&amp;lt;String&amp;gt; set = Sets.mutable.&lt;strong&gt;with&lt;/strong&gt;(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;);&lt;/pre&gt;&lt;p&gt;If you prefer, you can also create a collection using the &lt;strong&gt;&lt;em&gt;of&lt;/em&gt;&lt;/strong&gt; factory method.&lt;/p&gt;&lt;pre&gt;MutableSet&amp;lt;String&amp;gt; set = Sets.mutable.&lt;strong&gt;of&lt;/strong&gt;(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;);&lt;/pre&gt;&lt;p&gt;There are also forms that take an Iterable as a parameter. These are called &lt;strong&gt;&lt;em&gt;ofAll&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;withAll&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;&lt;p&gt;In java.util.Collection, there are methods for adding and removing elements to and from collections. They are named &lt;strong&gt;&lt;em&gt;add&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;addAll&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;remove&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;removeAll&lt;/em&gt;&lt;/strong&gt;. These four methods return boolean. This makes them unsuitable for writing code fluently.&lt;/p&gt;&lt;p&gt;We have our own Mutable interfaces in Eclipse Collections, so we knew we could fix the fluency problem by using a one of the two prepositions. We decided to go with &lt;strong&gt;&lt;em&gt;with&lt;/em&gt;&lt;/strong&gt;, because &lt;strong&gt;&lt;em&gt;with&lt;/em&gt;&lt;/strong&gt; has a natural opposite named &lt;strong&gt;&lt;em&gt;without&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;&lt;pre&gt;Set&amp;lt;String&amp;gt; set = &lt;br /&gt;    Sets.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;)&lt;br /&gt;        .with(&lt;strong&gt;&quot;4&quot;&lt;/strong&gt;)&lt;br /&gt;        .without(&lt;strong&gt;&quot;2&quot;&lt;/strong&gt;);&lt;/pre&gt;&lt;pre&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(Sets.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;4&quot;&lt;/strong&gt;), set);&lt;/pre&gt;&lt;p&gt;This naming pattern also worked well when adding elements via an Iterable.&lt;/p&gt;&lt;pre&gt;Set&amp;lt;String&amp;gt; set =&lt;br /&gt;        Sets.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;)&lt;br /&gt;                .withAll(Lists.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;4&quot;&lt;/strong&gt;))&lt;br /&gt;                .withoutAll(Lists.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;));&lt;/pre&gt;&lt;pre&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(Sets.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;4&quot;&lt;/strong&gt;), set);&lt;/pre&gt;&lt;p&gt;As you can see, we have &lt;strong&gt;&lt;em&gt;with&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;withAll&lt;/em&gt;&lt;/strong&gt;, &lt;strong&gt;&lt;em&gt;without&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;withoutAll&lt;/em&gt;&lt;/strong&gt; as instance methods directly on our mutable collections. Instead of returning boolean like add or remove, these methods return &lt;em&gt;this&lt;/em&gt;, which is the collection that the method is operating on. These methods have good &lt;a href=&quot;https://medium.com/@donraab/symmetric-sympathy-2c59d4541d60&quot;&gt;symmetry&lt;/a&gt; with the existing methods on Collection that return boolean, and also with each other.&lt;/p&gt;&lt;p&gt;We extended this pattern to our immutable collections as well.&lt;/p&gt;&lt;pre&gt;ImmutableSet&amp;lt;String&amp;gt; set =&lt;br /&gt;        Sets.&lt;strong&gt;&lt;em&gt;immutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;)&lt;br /&gt;                .newWithAll(Lists.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;4&quot;&lt;/strong&gt;))&lt;br /&gt;                .newWithoutAll(Lists.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;));&lt;/pre&gt;&lt;pre&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(Sets.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;4&quot;&lt;/strong&gt;), set);&lt;/pre&gt;&lt;p&gt;In the mutable case, the &lt;strong&gt;&lt;em&gt;withAll&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;withoutAll&lt;/em&gt;&lt;/strong&gt; methods mutate the existing collection. In the &lt;strong&gt;&lt;em&gt;newWithAll&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;newWithoutAll&lt;/em&gt;&lt;/strong&gt; cases, a new collection is returned each time, thus preserving the immutability of the original collection.&lt;/p&gt;&lt;h4&gt;Attack Of the Clones&lt;/h4&gt;&lt;p&gt;The preposition &lt;strong&gt;&lt;em&gt;of&lt;/em&gt;&lt;/strong&gt; lost the battle of the instance-based collection factory methods in Eclipse Collections, because there is no good natural opposite for &lt;strong&gt;&lt;em&gt;of&lt;/em&gt;&lt;/strong&gt; like there is for &lt;strong&gt;&lt;em&gt;with&lt;/em&gt;&lt;/strong&gt;. That said, &lt;strong&gt;&lt;em&gt;of&lt;/em&gt;&lt;/strong&gt; is sometimes an important part of other method names in the Eclipse Collections API.&lt;/p&gt;&lt;pre&gt;&lt;strong&gt;// Bag API - occurrencesOf&lt;br /&gt;&lt;/strong&gt;MutableBag&amp;lt;String&amp;gt; bag = Bags.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(1, bag.occurrences&lt;strong&gt;Of&lt;/strong&gt;(&lt;strong&gt;&quot;2&quot;&lt;/strong&gt;));&lt;/pre&gt;&lt;pre&gt;&lt;strong&gt;// List API - indexOf&lt;br /&gt;&lt;/strong&gt;MutableList&amp;lt;String&amp;gt; list = Lists.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(1, list.index&lt;strong&gt;Of&lt;/strong&gt;(&lt;strong&gt;&quot;2&quot;&lt;/strong&gt;));&lt;/pre&gt;&lt;pre&gt;&lt;strong&gt;// RichIterable API - sumOfInt, sumOfLong, sumOfFloat, sumOfDouble &lt;br /&gt;&lt;/strong&gt;MutableList&amp;lt;String&amp;gt; list = Lists.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;);&lt;br /&gt;long sum = list.sum&lt;strong&gt;Of&lt;/strong&gt;Int(Integer::&lt;em&gt;parseInt&lt;/em&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(6L, sum);&lt;/pre&gt;&lt;pre&gt;&lt;strong&gt;// RichIterable API - selectInstancesOf&lt;br /&gt;&lt;/strong&gt;MutableList&amp;lt;String&amp;gt; list = Lists.&lt;strong&gt;&lt;em&gt;mutable&lt;/em&gt;&lt;/strong&gt;.with(&lt;strong&gt;&quot;1&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;2&quot;&lt;/strong&gt;, &lt;strong&gt;&quot;3&quot;&lt;/strong&gt;);&lt;br /&gt;MutableList&amp;lt;String&amp;gt; filtered = list.selectInstances&lt;strong&gt;Of&lt;/strong&gt;(String.class);&lt;br /&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(list, filtered);&lt;/pre&gt;&lt;h4&gt;Revenge of the With&lt;/h4&gt;&lt;figure&gt;&lt;img alt=&quot;&quot; src=&quot;https://cdn-images-1.medium.com/max/657/1*x4ALHa9eE0gp5TKs61nJ0w.png&quot; /&gt;With methods in the RichIterable interface&lt;/figure&gt;&lt;p&gt;&lt;strong&gt;&lt;em&gt;With&lt;/em&gt;&lt;/strong&gt; became more prevalent in the Eclipse Collections APIs when it was used to augment existing APIs like select, reject, collect, etc. The &lt;strong&gt;&lt;em&gt;With&lt;/em&gt;&lt;/strong&gt; methods in the RichIterable API were originally added as optimizations. They allowed us to make anonymous inner classes static, by providing more opportunities to make them completely stateless. As a completely independent and accidental benefit, the &lt;strong&gt;&lt;em&gt;With&lt;/em&gt;&lt;/strong&gt; methods provide more opportunities for us to use Method References with Eclipse Collections APIs. This is a good thing, because I have a &lt;strong&gt;Method Reference Preference&lt;/strong&gt;. Here are some examples of using some of these methods with Method References using the domain from the &lt;a href=&quot;https://github.com/eclipse/eclipse-collections-kata&quot;&gt;Eclipse Collections Pet Kata&lt;/a&gt;.&lt;/p&gt;&lt;pre&gt;boolean any =&lt;br /&gt;        this.people.anySatisfy&lt;strong&gt;With&lt;/strong&gt;(Person::hasPet, PetType.&lt;strong&gt;&lt;em&gt;CAT&lt;/em&gt;&lt;/strong&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertTrue&lt;/em&gt;(any);&lt;br /&gt;&lt;br /&gt;boolean all =&lt;br /&gt;        this.people.allSatisfy&lt;strong&gt;With&lt;/strong&gt;(Person::hasPet, PetType.&lt;strong&gt;&lt;em&gt;CAT&lt;/em&gt;&lt;/strong&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertFalse&lt;/em&gt;(all);&lt;br /&gt;&lt;br /&gt;boolean none =&lt;br /&gt;        this.people.noneSatisfy&lt;strong&gt;With&lt;/strong&gt;(Person::hasPet, PetType.&lt;strong&gt;&lt;em&gt;CAT&lt;/em&gt;&lt;/strong&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertFalse&lt;/em&gt;(none);&lt;br /&gt;&lt;br /&gt;Person found =&lt;br /&gt;        this.people.detect&lt;strong&gt;With&lt;/strong&gt;(Person::hasPet, PetType.&lt;strong&gt;&lt;em&gt;CAT&lt;/em&gt;&lt;/strong&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertNotNull&lt;/em&gt;(found);&lt;br /&gt;&lt;br /&gt;int count =&lt;br /&gt;        this.people.count&lt;strong&gt;With&lt;/strong&gt;(Person::hasPet, PetType.&lt;strong&gt;&lt;em&gt;CAT&lt;/em&gt;&lt;/strong&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(2, count);&lt;br /&gt;&lt;br /&gt;MutableList&amp;lt;Person&amp;gt; selected =&lt;br /&gt;        this.people.select&lt;strong&gt;With&lt;/strong&gt;(Person::hasPet, PetType.&lt;strong&gt;&lt;em&gt;CAT&lt;/em&gt;&lt;/strong&gt;);&lt;br /&gt;MutableList&amp;lt;Person&amp;gt; rejected =&lt;br /&gt;        this.people.reject&lt;strong&gt;With&lt;/strong&gt;(Person::hasPet, PetType.&lt;strong&gt;&lt;em&gt;CAT&lt;/em&gt;&lt;/strong&gt;);&lt;br /&gt;PartitionMutableList&amp;lt;Person&amp;gt; partition =&lt;br /&gt;        this.people.partition&lt;strong&gt;With&lt;/strong&gt;(Person::hasPet, PetType.&lt;strong&gt;&lt;em&gt;CAT&lt;/em&gt;&lt;/strong&gt;);&lt;br /&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(selected, partition.getSelected());&lt;br /&gt;Assert.&lt;em&gt;assertEquals&lt;/em&gt;(rejected, partition.getRejected());&lt;/pre&gt;&lt;p&gt;Good API design is hard, because naming is hard. It is a great feeling when you discover and use a name that communicates intent clearly to other developers. The best way to do that, is to run your names by other developers you work with you to get a consensus before settling on a name. On very rare occasions where a consensus is not possible (e.g. two equally good alternatives), either just pick a winner or take the cost of providing both. My preference is almost always to just pick a winner and move on. Providing both &lt;strong&gt;&lt;em&gt;of&lt;/em&gt;&lt;/strong&gt; and &lt;strong&gt;&lt;em&gt;with&lt;/em&gt;&lt;/strong&gt; factory methods will hopefully be a rare exception.&lt;/p&gt;&lt;p&gt;I hope you found this blog helpful. If you liked the blog, claps are appreciated.&lt;/p&gt;&lt;img height=&quot;1&quot; src=&quot;https://medium.com/_/stat?event=post.clientViewed&amp;amp;referrerSource=full_rss&amp;amp;postId=1f1c709b098b&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Wed, 15 Nov 2017 21:53:23 +0000</pubDate>
+</item>
+<item>
+	<title>Mike Milinkovich: Help Pick the New Name for Java EE</title>
+	<guid isPermaLink="false">http://mmilinkov.wordpress.com/?p=1405</guid>
+	<link>https://mmilinkov.wordpress.com/2017/11/15/help-pick-the-new-name-for-java-ee/</link>
+	<description>&lt;p&gt;This blog post is based on the text of Eclipse EE4J’s &lt;a href=&quot;https://github.com/eclipse-ee4j/ee4j/issues/1&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;very first GitHub Issue&lt;/a&gt;. Please join the conversation over there!&lt;/p&gt;
+&lt;p&gt;We need a new brand name for the set of specifications that will be created by the new community process. This brand name will also become a certification mark in the industry for compatible, independent implementations. The open source projects that fall under the Eclipse EE4J top level project will be one such implementation. In short, we need a new name to replace “Java EE”. Much like the &lt;em&gt;OpenJDK project &lt;/em&gt;implements the &lt;em&gt;Java SE Platform specification&lt;/em&gt;, the &lt;em&gt;EE4J projects&lt;/em&gt; will provide implementations of a set of specifications that we today call &lt;em&gt;Java EE&lt;/em&gt;: we need a brand name for this set of specifications.&lt;/p&gt;
+&lt;p&gt;With this in mind, we are initiating a community process to select the brand name. This process will be managed by the EE4J Project Management Committee (“PMC”) with assistance from the Eclipse Management Organization (“EMO”). The name that is selected by this process must pass legal and other trademark searches to ensure that the names are available for use. As a result, it is possible that the favoured selection will not be the ultimate choice. The final decision will be made by the EMO Executive Director (“EMO(ED)”) in consultation with the PMC.&lt;/p&gt;
+&lt;p&gt;The process is described in greater detail below.&lt;/p&gt;
+&lt;h3&gt;Nominations&lt;/h3&gt;
+&lt;p&gt;Names can be nominated by anyone in the community via &lt;a href=&quot;https://github.com/eclipse-ee4j/ee4j/issues/1&quot;&gt;this GitHub Issue&lt;/a&gt; record.&lt;/p&gt;
+&lt;p&gt;Nominations will be open from November 15 until November 30, 2018.&lt;/p&gt;
+&lt;h3&gt;Naming Guidelines&lt;/h3&gt;
+&lt;p&gt;All suggested names must conform to the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;They must conform to &lt;a href=&quot;https://www.oracle.com/legal/trademarks.html&quot;&gt;Oracle’s trademark usage guidelines&lt;/a&gt;. Amongst other things this means that the name cannot start with the word “Java”.&lt;/li&gt;
+&lt;li&gt;They must conform to the &lt;a href=&quot;https://www.eclipse.org/legal/logo_guidelines.php&quot;&gt;Eclipse Foundation trademark guidelines&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;They must not be obscene, sexist, racist, controversial, etc., and they must not be frivolous (e.g. we’re not going to choose &lt;em&gt;Boaty McBoatface&lt;/em&gt; or the like.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Any suggested names which fail to meet the above criteria will be rejected.&lt;/p&gt;
+&lt;h3&gt;Name Selection Process&lt;/h3&gt;
+&lt;p&gt;The process will be executed as follows:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Members of the community will be invited to enter their nominations into the specified channel;&lt;/li&gt;
+&lt;li&gt;At the end of the nomination period, the names suggested by the community will be reviewed by the PMC to identify those which meet the criteria specified in the by the naming guidelines (depending on response, the PMC may decide to further reduce the list to a manageable size);&lt;/li&gt;
+&lt;li&gt;The PMC will then initiate a community vote using the &lt;a href=&quot;http://civs.cs.cornell.edu/&quot;&gt;CIVS&lt;/a&gt; system (which will produce an overall ranking of the choices); and&lt;/li&gt;
+&lt;li&gt;The results of the vote will be delivered to the EMO(ED) who will engage in the required legal and other trademark searches to ensure that the names are available for use, and consult with the PMC to make the final decision.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Since we have no idea what sort of community response to expect, it is difficult to time box anything other than the initial nomination process. But this will be an open and transparent process, and we invite the community to engage in all aspects of it. There is a great deal of legal, marketing, and community thought that goes into selecting an industry brand, so it’s important that we get this right. This may take a little time.&lt;/p&gt;&lt;br /&gt;Filed under: &lt;a href=&quot;https://mmilinkov.wordpress.com/category/foundation/&quot;&gt;Foundation&lt;/a&gt;  &lt;a href=&quot;http://feeds.wordpress.com/1.0/gocomments/mmilinkov.wordpress.com/1405/&quot; rel=&quot;nofollow&quot;&gt;&lt;img alt=&quot;&quot; border=&quot;0&quot; src=&quot;http://feeds.wordpress.com/1.0/comments/mmilinkov.wordpress.com/1405/&quot; /&gt;&lt;/a&gt; &lt;img alt=&quot;&quot; border=&quot;0&quot; height=&quot;1&quot; src=&quot;https://pixel.wp.com/b.gif?host=mmilinkov.wordpress.com&amp;amp;blog=19461799&amp;amp;post=1405&amp;amp;subd=mmilinkov&amp;amp;ref=&amp;amp;feed=1&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Wed, 15 Nov 2017 16:29:03 +0000</pubDate>
+</item>
+<item>
+	<title>Eclipse Announcements: Open IoT Challenge 4.0 | Extended Deadline Nov 20</title>
+	<guid isPermaLink="true">http://feedproxy.google.com/~r/eclipse/fnews/~3/3vZ8AE7H3hw/</guid>
+	<link>http://feedproxy.google.com/~r/eclipse/fnews/~3/3vZ8AE7H3hw/</link>
+	<description>One last week to submit your open IoT solution idea. You can then work on it until March 15. Submit now!&lt;img alt=&quot;&quot; height=&quot;1&quot; src=&quot;http://feeds.feedburner.com/~r/eclipse/fnews/~4/3vZ8AE7H3hw&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Wed, 15 Nov 2017 10:30:00 +0000</pubDate>
+</item>
+<item>
+	<title>Christopher Guindon: Say Goodbye to the Eclipse Foundation Nova Theme</title>
+	<guid isPermaLink="true">https://www.chrisguindon.com/post/say-goodbye-to-the-eclipse-nova-theme/</guid>
+	<link>https://www.chrisguindon.com/post/say-goodbye-to-the-eclipse-nova-theme/</link>
+	<description>&lt;p&gt;The Eclipse Foundation is planning on removing a few deprecated components from &lt;a href=&quot;https://git.eclipse.org/r/plugins/gitiles/www.eclipse.org/eclipse.org-common&quot;&gt;eclipse.org-common&lt;/a&gt; in an effort to reduce our code base for &lt;a href=&quot;https://www.eclipse.org/&quot;&gt;www.eclipse.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We are using &lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=526827&quot;&gt;Bug 526827 - Fall clean up of eclipse.org-common&lt;/a&gt; to track the following tasks:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=468336&quot;&gt;Bug 468336 - Remove support for the Nova theme in eclipse.org-common&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=526824&quot;&gt;Bug 526824 - Remove yui from eclipse.org-common&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=526825&quot;&gt;Bug 526825 - Remove Services_JSON from eclipse.org-common&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=526826&quot;&gt;Bug 526826 - Remove JQuery from eclipse.org-common&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I believe this “clean up” exercise is our first step towards the execution of my long term plan for migrating our code base to follow recommendations from the &lt;a href=&quot;http://www.php-fig.org/&quot;&gt;PHP Framework Interop Group&lt;/a&gt;. I will be writing about this subject in a future blog post but for now, you can take a look at &lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=496514&quot;&gt;Bug 496514 - PHP sites maintained by the EF should follow recommendations from the Framework Interop Group&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;bug-468336-remove-support-for-the-nova-theme-in-eclipse-org-common&quot;&gt;Bug 468336 - Remove support for the Nova theme in eclipse.org-common&lt;/h3&gt;
+
+&lt;p&gt;During the summer of 2014, my team was responsible for implementing the redesign of &lt;a href=&quot;https://www.eclipse.org/&quot;&gt;www.eclipse.org&lt;/a&gt; via &lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=432342&quot;&gt;Bug 432342 - Eclipse.org Website Redesign 2014&lt;/a&gt;. We created a new look and feel called &lt;strong&gt;Solstice&lt;/strong&gt; and since then, we’ve been busy migrating all of our web properties.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt=&quot;Solstice look and feel&quot; src=&quot;https://www.chrisguindon.com/images/04-remove-nova/01-solstice.jpg&quot; title=&quot;Solstice look and feel&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Today, I am happy to announce that it’s finally time to retire the Eclipse Nova theme. We are planning on removing the Nova theme from &lt;a href=&quot;https://git.eclipse.org/r/plugins/gitiles/www.eclipse.org/eclipse.org-common&quot;&gt;eclipse.org-common&lt;/a&gt; on &lt;strong&gt;December 5th, 2017&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Solstice look and feel will become the default theme for all web pages that are currently being served with Nova.&lt;/p&gt;
+
+&lt;p&gt;This change will be affecting the following websites:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/10years/&quot;&gt;Celebrating 10 years of Eclipse&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/amp/&quot;&gt;Agent Modeling Platform&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/bpel/&quot;&gt;PEL Designer Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/bpmn2-modeler/&quot;&gt;BPMN2 Modeler&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/cdo/&quot;&gt;CDO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/cdt/&quot;&gt;Eclipse CDT (C/C++ Development Tooling)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/damos/&quot;&gt;Damos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/egf/&quot;&gt;EGF&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/emf-refactor/&quot;&gt;EMF Refactor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/equinox/&quot;&gt;Equinox&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/facet/&quot;&gt;EMF Facet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/fmc/&quot;&gt;FMC - Fundamental Modeling Concepts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/gef3d/&quot;&gt;GEF3D&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/gemini/&quot;&gt;Gemini&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/gemini/dbaccess/&quot;&gt;Gemini DBAccess&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/gemini/jpa/&quot;&gt;Gemini JPA&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/henshin/&quot;&gt;Henshin&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/jwt/&quot;&gt;Java Workflow Tooling (JWT)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/libra/&quot;&gt;Libra&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/m2e-wtp/&quot;&gt;Maven Integration for WTP&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/mangrove/&quot;&gt;Mangrove - SOA Modeling Framework&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/mmt/&quot;&gt;Model to Model Transformation (MMT)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/modeling/gmp/&quot;&gt;Graphical Modeling Project (GMP)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/modeling/mdt/&quot;&gt;Model Development Tools (MDT)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/mpc/&quot;&gt;Marketplace Client&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/osee/&quot;&gt;OSEE: The Open System Engineering Environment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/pulsar/&quot;&gt;Pulsar&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/r4e/&quot;&gt;R4E&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/rt/&quot;&gt;RT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/skalli/&quot;&gt;Skalli&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/soa/&quot;&gt;SOA Platform Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/stem/&quot;&gt;The Spatiotemporal Epidemiological Modeler (STEM) Project&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/tigerstripe/&quot;&gt;Tigerstripe&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/tycho/&quot;&gt;Tycho - Building Eclipse plug-ins with maven&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/uomo/&quot;&gt;UOMo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://eclipse.org/vex/&quot;&gt;Vex - A Visual Editor for XML&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please use &lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=468336&quot;&gt;Bug 468336 - Remove support for the Nova theme in eclipse.org-common&lt;/a&gt; to discuss any concerns regarding this change.&lt;/p&gt;</description>
+	<pubDate>Wed, 15 Nov 2017 00:00:00 +0000</pubDate>
+</item>
+<item>
+	<title>Kichwa Coders: Debug Protocol: Coming soon to an IDE near you</title>
+	<guid isPermaLink="false">http://kichwacoders.com/?p=3145</guid>
+	<link>https://kichwacoders.com/2017/11/14/debug-protocol-coming-soon-to-an-ide-near-you/</link>
+	<description>&lt;p&gt;Our absolute favourite type of talk to do is one where we’ve been working on something so cutting-edge that we don’t have all the answers yet. This was the case with our work on the debug protocol and our talk at EclipseCon Europe. We got to take where we’d gotten to and present it to a room full of smart people who were generous enough to show up, ask questions and give us their insightful feedback.&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;p&gt;The talk gives an overview of the debug protocol then demonstrates it working in:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VS Code&lt;/li&gt;
+&lt;li&gt;Eclipse IDE&lt;/li&gt;
+&lt;li&gt;Eclipse Che&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We demo 7 different types of debug functionality as supported by the protocol:&lt;span id=&quot;more-3145&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Launch&lt;/li&gt;
+&lt;li&gt;Source lookup&lt;/li&gt;
+&lt;li&gt;Call stacks&lt;/li&gt;
+&lt;li&gt;Breakpoints&lt;/li&gt;
+&lt;li&gt;Variables&lt;/li&gt;
+&lt;li&gt;Run control (step, continue, etc)&lt;/li&gt;
+&lt;li&gt;Termination&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;embed-twitter&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot;&gt;
+&lt;p dir=&quot;ltr&quot; lang=&quot;en&quot;&gt;Full house for Tracy and Jonah's Debug Server Protocol talk in the last slot of the conference. The IDE evolves. &lt;a href=&quot;https://t.co/YfoURtDic9&quot;&gt;pic.twitter.com/YfoURtDic9&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;— Doug Schaefer (@dougschaefer) &lt;a href=&quot;https://twitter.com/dougschaefer/status/923517318868668416?ref_src=twsrc%5Etfw&quot;&gt;October 26, 2017&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;
+&lt;div class=&quot;embed-twitter&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot;&gt;
+&lt;p dir=&quot;ltr&quot; lang=&quot;en&quot;&gt;&lt;a href=&quot;https://twitter.com/JonahGrahamKC?ref_src=twsrc%5Etfw&quot;&gt;@JonahGrahamKC&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/tracymiranda?ref_src=twsrc%5Etfw&quot;&gt;@tracymiranda&lt;/a&gt; demonstrating the potential of Microsoft’s Debug Protocol &lt;a href=&quot;https://t.co/CdycgRdl10&quot;&gt;https://t.co/CdycgRdl10&lt;/a&gt; at the &lt;a href=&quot;https://twitter.com/EclipseCon?ref_src=twsrc%5Etfw&quot;&gt;@EclipseCon&lt;/a&gt; &lt;img alt=&quot;👍&quot; class=&quot;wp-smiley&quot; src=&quot;https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/72x72/1f44d.png&quot; style=&quot;height: 1em;&quot; /&gt; &lt;a href=&quot;https://t.co/JPou7UPLco&quot;&gt;pic.twitter.com/JPou7UPLco&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;— Andreas Rytina (@andyrytina) &lt;a href=&quot;https://twitter.com/andyrytina/status/923558234601984000?ref_src=twsrc%5Etfw&quot;&gt;October 26, 2017&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;
+&lt;div class=&quot;embed-twitter&quot;&gt;
+&lt;blockquote class=&quot;twitter-tweet&quot;&gt;
+&lt;p dir=&quot;ltr&quot; lang=&quot;en&quot;&gt;Another great discussion about tooling protocols. Debug Server protocol is coming in &lt;a href=&quot;https://twitter.com/hashtag/EclipseChe?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#EclipseChe&lt;/a&gt; and desktop IDE. &lt;a href=&quot;https://twitter.com/kichwacoders?ref_src=twsrc%5Etfw&quot;&gt;@kichwacoders&lt;/a&gt; &lt;a href=&quot;https://twitter.com/hashtag/EclipseCon?src=hash&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;#EclipseCon&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;— Stevan Le Meur (@stevanLM) &lt;a href=&quot;https://twitter.com/stevanLM/status/923517017965162497?ref_src=twsrc%5Etfw&quot;&gt;October 26, 2017&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;/p&gt;&lt;/div&gt;
+&lt;p&gt;OK, so we are amazing at building debuggers but we are completely hopeless at repeating questions so you can hear them in presentation talk recordings. And the questions we were asked were really good, so here is my attempt to record them, as well as repost the answers plus update with the latest state of affairs.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Where can I find the code?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Here’s where you can find the git repo: &lt;a href=&quot;https://github.com/tracymiranda/dsp4e&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://github.com/tracymiranda/dsp4e&lt;/a&gt;. But even better, we are actively working on pull requests so that the code will become part of existing projects LSP4J, LSP4E and Eclipse Che. You can checkout the first PR for LSP4J here: &lt;a href=&quot;https://github.com/eclipse/lsp4j/pull/131&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;https://github.com/eclipse/lsp4j/pull/131&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Does the debug protocol support drop to frame? What about evaluate expressions? Hovers? Step into?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Definitely yes to evaluate expressions, hovers and step into. Don’t think it supports drop to frame, not obviously but may be there using different terminology.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Is the protocol extensible?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Yes, so you could add functionality like drop-to-frame. But the extensibility is not formalized so that is something we would like to help address.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Is the protocol blocking?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;No it is asynchronous.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Does it use JSON-RPC just like the Language Server Protocol?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;No it pre-dates JSON-RPC 2.0 and uses its own custom protocol. It is similar enough to JSON-RPC. While it would be nice to have the same protocol being used, it is probably not worth the effort to change this given the number of existing debug adapter implementations already out in the wild.&lt;/p&gt;
+&lt;p&gt;Also thanks to all those who left written feedback on the talk, especially the person who had this to say:&lt;/p&gt;
+&lt;p&gt;“&lt;em&gt;A really good initiative. Don’t over do it though by pushing making the protocol complex just to support features of one language, seems like it is a case for C/C++, i.e. registers support. It could be a separate extension.&lt;/em&gt;”&lt;/p&gt;
+&lt;p&gt;Great point, thanks for the input!&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;&lt;br /&gt;  &lt;a href=&quot;http://feeds.wordpress.com/1.0/gocomments/kichwacoders.wordpress.com/3145/&quot; rel=&quot;nofollow&quot;&gt;&lt;img alt=&quot;&quot; border=&quot;0&quot; src=&quot;http://feeds.wordpress.com/1.0/comments/kichwacoders.wordpress.com/3145/&quot; /&gt;&lt;/a&gt; &lt;img alt=&quot;&quot; border=&quot;0&quot; height=&quot;1&quot; src=&quot;https://pixel.wp.com/b.gif?host=kichwacoders.com&amp;amp;blog=68353182&amp;amp;post=3145&amp;amp;subd=kichwacoders&amp;amp;ref=&amp;amp;feed=1&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Tue, 14 Nov 2017 11:43:35 +0000</pubDate>
+</item>
+<item>
+	<title>vert.x project: Eclipse Vert.x meets GraphQL</title>
+	<guid isPermaLink="true">http://vertx.io/blog/eclipse-vert-x-meets-graphql</guid>
+	<link>http://vertx.io/blog/eclipse-vert-x-meets-graphql</link>
+	<description>&lt;article&gt;&lt;p&gt;I recently added GraphQL support to &lt;a href=&quot;https://github.com/gentics/mesh&quot;&gt;Gentics Mesh&lt;/a&gt; and I thought it would be a good idea to boil down the essence of my implementation in example so that I could share it in a simpler form.
+The example I’m about to show will not cover all aspects that I have added to the &lt;a href=&quot;https://getmesh.io/docs/beta/graphql.html&quot;&gt;Gentics Mesh API&lt;/a&gt; (e.g. paging, search and error handling) but it will give you a basic overview of the parts that I put together.
+GraphQL does not require a GraphDB even if the name might suggest it.&lt;/p&gt;
+&lt;p&gt;Using a graphdb in combination with GraphQL does nevertheless provide you with some advantages which I will highlight later on.&lt;/p&gt;
+&lt;h2 id=&quot;what-is-graphql-what-is-it-good-for-&quot;&gt;What is GraphQL? What is it good for?&lt;/h2&gt;
+&lt;p&gt;GraphQL as the name suggests is a new query language which can be used to load exactly the amount of data which you ask for. &lt;/p&gt;
+&lt;p&gt;The query is defined in way that the query fields correlate to the JSON data that is being retrieved. 
+In our StarWars Demo domain model this query will load the name of human 1001 which is Darth Vader.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;hljs&quot;&gt;&lt;span class=&quot;hljs-rules&quot;&gt;{
+  &lt;span class=&quot;hljs-rule&quot;&gt;&lt;span class=&quot;hljs-attribute&quot;&gt;vader&lt;/span&gt;:&lt;span class=&quot;hljs-value&quot;&gt; &lt;span class=&quot;hljs-function&quot;&gt;human&lt;/span&gt;(id: &lt;span class=&quot;hljs-number&quot;&gt;1001&lt;/span&gt;) {
+      name
+  &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;}
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Would result in:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;hljs json&quot;&gt;{
+  &quot;&lt;span class=&quot;hljs-attribute&quot;&gt;data&lt;/span&gt;&quot;: &lt;span class=&quot;hljs-value&quot;&gt;{
+    &quot;&lt;span class=&quot;hljs-attribute&quot;&gt;vader&lt;/span&gt;&quot;: &lt;span class=&quot;hljs-value&quot;&gt;{
+      &quot;&lt;span class=&quot;hljs-attribute&quot;&gt;name&lt;/span&gt;&quot;: &lt;span class=&quot;hljs-value&quot;&gt;&lt;span class=&quot;hljs-string&quot;&gt;&quot;Darth Vader&quot;&lt;/span&gt;
+    &lt;/span&gt;}
+  &lt;/span&gt;}
+&lt;/span&gt;}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;the-demo-app&quot;&gt;The Demo App&lt;/h2&gt;
+&lt;p&gt;The demo application I build makes use of the &lt;a href=&quot;https://github.com/graphql-java/graphql-java&quot;&gt;graphql-java&lt;/a&gt; library. The data is being stored in a graph database.
+I use &lt;a href=&quot;http://orientdb.com/orientdb/&quot;&gt;OrientDB&lt;/a&gt; in combination with the &lt;a href=&quot;https://github.com/Syncleus/Ferma&quot;&gt;OGM Ferma&lt;/a&gt; to provide a data access layer.
+GraphQL does not necessarily require a graph database but in this example I will make use of one and highlight the benefits of using a GraphDB for my usecase.&lt;/p&gt;
+&lt;p&gt;You can find the sources here: &lt;a href=&quot;https://github.com/Jotschi/vertx-graphql-example&quot;&gt;https://github.com/Jotschi/vertx-graphql-example&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;data&quot;&gt;Data&lt;/h3&gt;
+&lt;p&gt;The &lt;a href=&quot;https://github.com/Jotschi/vertx-graphql-example/blob/master/src/main/java/de/jotschi/vertx/data/StarWarsData.java&quot;&gt;StarWarsData&lt;/a&gt; class creates a Graph which contains the Star Wars Movies and Characters, Planets and their relations.
+The model is fairly simple. There is a single StarWarsRoot vertex which acts as a start element for various aggregation vertices: Movies are stored in MovieRoot, Planets in PlanetsRoot, Characters are stored in HumansRoot and DroidsRoot.&lt;/p&gt;
+&lt;p&gt;The model classes are used for wrappers of the specific graph vertices. The &lt;a href=&quot;http://syncleus.com/Ferma/&quot;&gt;Ferma OGM&lt;/a&gt; is used to provide these wrappers. Each class contains methods which can be used to traverse the graph to locate the needed vertices.
+The found vertices are in turn again wrapped and can be used to locate other graph elements.&lt;/p&gt;
+&lt;h3 id=&quot;schema&quot;&gt;Schema&lt;/h3&gt;
+&lt;p&gt;The next thing we need is the GraphQL schema. The schema describes each element which can be retrieved. It also describes the properties and relationships for these elements.&lt;/p&gt;
+&lt;p&gt;The graphql-java library provides an API to create the object types and schema information.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;hljs&quot;&gt;&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;private&lt;/span&gt; GraphQLObjectType &lt;span class=&quot;hljs-title&quot;&gt;createMovieType&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;{
+  &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;hljs-title&quot;&gt;newObject&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt;.&lt;span class=&quot;hljs-title&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;Movie&quot;&lt;/span&gt;)&lt;/span&gt;
+    .&lt;span class=&quot;hljs-title&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;One of the films in the Star Wars universe.&quot;&lt;/span&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;hljs-comment&quot;&gt;// .title&lt;/span&gt;
+    .&lt;span class=&quot;hljs-title&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(newFieldDefinition()&lt;/span&gt;.&lt;span class=&quot;hljs-title&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;title&quot;&lt;/span&gt;)&lt;/span&gt;
+        .&lt;span class=&quot;hljs-title&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;Title of the episode.&quot;&lt;/span&gt;)&lt;/span&gt;
+        .&lt;span class=&quot;hljs-title&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(GraphQLString)&lt;/span&gt;
+        .&lt;span class=&quot;hljs-title&quot;&gt;dataFetcher&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;((env)&lt;/span&gt; -&amp;gt; &lt;/span&gt;{
+          Movie movie = env.getSource();
+          &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; movie.getName();
+        }))
+
+    &lt;span class=&quot;hljs-comment&quot;&gt;// .description&lt;/span&gt;
+    .field(newFieldDefinition().name(&lt;span class=&quot;hljs-string&quot;&gt;&quot;description&quot;&lt;/span&gt;)
+        .description(&lt;span class=&quot;hljs-string&quot;&gt;&quot;Description of the episode.&quot;&lt;/span&gt;)
+        .type(GraphQLString))
+
+    .build();
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A type can be referenced via a &lt;code&gt;GraphQLTypeReference&lt;/code&gt; once it has been created and added to the schema. This is especially important if you need to add fields which reference other types.
+Data fetchers are used to access the context, traverse the graph and retrieve properties from graph elements.&lt;/p&gt;
+&lt;p&gt;Another great source to learn more about the schema options is the &lt;a href=&quot;https://github.com/graphql-java/graphql-java/blob/master/src/test/groovy/graphql/GarfieldSchema.java&quot;&gt;GarfieldSchema&lt;/a&gt; example.&lt;/p&gt;
+&lt;p&gt;Finally all the created types must be referenced by a central object type &lt;a href=&quot;https://github.com/Jotschi/vertx-graphql-example/blob/master/src/main/java/de/jotschi/vertx/data/StarWarsSchema.java#L204&quot;&gt;QueryType&lt;/a&gt;.
+The query type object is basically the root object for the query.
+It defines what query options are initially possible. In our case it is possible to load the hero of the sage, specific movies, humans or droids.&lt;/p&gt;
+&lt;h3 id=&quot;verticle&quot;&gt;Verticle&lt;/h3&gt;
+&lt;p&gt;The &lt;a href=&quot;https://github.com/Jotschi/vertx-graphql-example/blob/master/src/main/java/de/jotschi/vertx/GraphQLVerticle.java&quot;&gt;GraphQLVerticle&lt;/a&gt; is used to accept the GraphQL request and process it.&lt;/p&gt;
+&lt;p&gt;The verticle also contains a StaticHandler to provide the Graphiql Browser web interface. This interface will allow you to quickly discover and experiment with GraphQL.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&quot;https://github.com/Jotschi/vertx-graphql-example/blob/master/src/main/java/de/jotschi/vertx/GraphQLVerticle.java#L77&quot;&gt;query handler&lt;/a&gt; accepts the query JSON data. &lt;/p&gt;
+&lt;p&gt;An OrientDB transaction is being opened and the query is executed:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;hljs java&quot;&gt;demoData.getGraph().asyncTx((tx) -&amp;gt; {
+    &lt;span class=&quot;hljs-comment&quot;&gt;// Invoke the query and handle the resulting JSON&lt;/span&gt;
+    GraphQL graphQL = newGraphQL(schema).build();
+    ExecutionInput input = &lt;span class=&quot;hljs-keyword&quot;&gt;new&lt;/span&gt; ExecutionInput(query, &lt;span class=&quot;hljs-keyword&quot;&gt;null&lt;/span&gt;, queryJson, demoData.getRoot(), extractVariables(queryJson));
+    tx.complete(graphQL.execute(input));
+}, (AsyncResult rh) -&amp;gt; {
+    ...
+});&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The execute method initially needs a context variable. This context passed along with the query.
+In our case the context is the root element of the graph &lt;code&gt;demoData.getRoot()&lt;/code&gt;.
+This context element also serves as the initial source for our data fetchers.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;hljs java&quot;&gt;.dataFetcher((env) -&amp;gt; {
+    StarWarsRoot root = env.getSource();
+    &lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; root.getHero();
+}))&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The data fetchers for the hero type on the other hand will be able to access the hero element since the fetcher above returned the element.
+Using this mechanism it is possible to traverse the graph. It is important to note that each invocation on the domain model methods will directly access the graph database.
+This way it is possible to influence the graph database query down to the lowest level. When omitting a property from the graphql query it will not be loaded from the graph.
+Thus there is no need to write an additional data access layer. All operations are directly mapped to graph database.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;StarWarsRoot&lt;/code&gt; Ferma class &lt;code&gt;getHero()&lt;/code&gt; method in turn defines a &lt;a href=&quot;http://tinkerpop.apache.org/docs/3.3.0/tutorials/getting-started/#_graph_traversal_staying_simple&quot;&gt;TinkerPop Gremlin traversal&lt;/a&gt; which is used to load the Vertex which represents the hero of the Star Wars saga.&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;&lt;div class=&quot;admonition-block info&quot;&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;admonition-icon&quot;&gt;&lt;i class=&quot;admonition-icon fa fa-info-circle&quot;&gt;&lt;/i&gt;&lt;/td&gt;&lt;td class=&quot;content&quot;&gt;&lt;span class=&quot;title&quot;&gt;Apache TinkerPop &lt;/span&gt;&lt;br /&gt;&lt;span class=&quot;content&quot;&gt; &lt;a href=&quot;http://tinkerpop.apache.org/&quot;&gt;Apache TinkerPop&lt;/a&gt; is an open source, vendor-agnostic, graph framework / API which is supported by many graph database vendors. 
+One part of TinkerPop is the Gremlin traversal language which is great to query graph databases.&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;hljs java&quot;&gt;...
+&lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;public&lt;/span&gt; Droid &lt;span class=&quot;hljs-title&quot;&gt;getHero&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;()&lt;/span&gt; &lt;/span&gt;{
+    &lt;span class=&quot;hljs-comment&quot;&gt;// Follow the HAS_ROOT edge and return the first found Vertex which could be found. &lt;/span&gt;
+    &lt;span class=&quot;hljs-comment&quot;&gt;// Wrap the Vertex explicitly in the Droid Ferma class.  &lt;/span&gt;
+    &lt;span class=&quot;hljs-function&quot;&gt;&lt;span class=&quot;hljs-keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;hljs-title&quot;&gt;traverse&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;((g)&lt;/span&gt; -&amp;gt; g.&lt;span class=&quot;hljs-title&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(HAS_HERO)&lt;/span&gt;).&lt;span class=&quot;hljs-title&quot;&gt;nextOrDefaultExplicit&lt;/span&gt;&lt;span class=&quot;hljs-params&quot;&gt;(Droid.class, &lt;span class=&quot;hljs-keyword&quot;&gt;null&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt;;
+}
+...&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the query has been executed the result handler is being invoked. It contains some code to process the result data and potential errors.
+It is important to note that a GraphQL query will always be answered with a 2xx HTTP status code.
+If an element which is being referenced in the query can’t be loaded an error will be added to the response JSON object.&lt;/p&gt;
+&lt;h3 id=&quot;testing&quot;&gt;Testing&lt;/h3&gt;
+&lt;p&gt;Testing is fairly straight forward. Although there are multiple approaches. One approach is to use unit testing directly on the GraphQL types. 
+Another option is to run queries against the endpoint.  &lt;/p&gt;
+&lt;p&gt;The &lt;a href=&quot;https://github.com/Jotschi/vertx-graphql-example/blob/master/src/test/java/de/jotschi/vertx/GraphQLTest.java&quot;&gt;GraphQLTest class&lt;/a&gt; I wrote will run multiple queries against the endpoint.
+A Parameterized JUnit test is used iterate over the queries.&lt;/p&gt;
+&lt;p&gt;A &lt;a href=&quot;https://github.com/Jotschi/vertx-graphql-example/blob/master/src/test/resources/graphql/full-query&quot;&gt;typical query&lt;/a&gt; does not only contain the query data.
+The assertions on the response JSON are directly included in query using plain comments.&lt;/p&gt;
+&lt;p&gt;I build an &lt;a href=&quot;http://joel-costigliola.github.io/assertj/&quot;&gt;AssertJ&lt;/a&gt; assertion to check the comments of a query and verify that the assertion matches the response.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;hljs java&quot;&gt;assertThat(response).compliesToAssertions(queryName);&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;run-the-example&quot;&gt;Run the example&lt;/h2&gt;
+&lt;p&gt;You can run the example by executing the &lt;code&gt;GraphQLServer&lt;/code&gt; class and access the &lt;a href=&quot;http://localhost:3000/browser/?query=%7B%0A%20%20movies%20%7B%0A%20%20%20%20title%0A%20%20%7D%0A%20%20hero%20%7B%0A%20%20%20%20name%0A%20%20%7D%0A%7D%0A&quot;&gt;Graphiql browser on http://localhost:3000/browser/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;where-to-go-from-here-&quot;&gt;Where to go from here?&lt;/h2&gt;
+&lt;p&gt;The example is read-only. GraphQL also supports data mutation which can be used to actually modify and store data.
+I have not yet explored that part of GraphQL but I assume it might not be that hard to add mutation support to the example.&lt;/p&gt;
+&lt;p&gt;Additionally it does not cover how to actually make use of such API. I recently &lt;a href=&quot;https://github.com/gentics/mesh-vertx-example/&quot;&gt;updated my Vert.x example&lt;/a&gt; which shows how to use Vert.x template handlers to build a small server which renders some pages using data which was loaded via GraphQL.&lt;/p&gt;
+&lt;p&gt;Thanks for reading. If you have any further questions or feedback don’t hesitate to send me a tweet to &lt;a href=&quot;https://twitter.com/Jotschi/&quot;&gt;@Jotschi&lt;/a&gt; or &lt;a href=&quot;https://twitter.com/genticsmesh/&quot;&gt;@genticsmesh&lt;/a&gt;.&lt;/p&gt;
+&lt;/article&gt;</description>
+	<pubDate>Tue, 14 Nov 2017 00:00:00 +0000</pubDate>
+</item>
+<item>
+	<title>Holger Voormann: Eclipse Oxygen.1a IDE Improvements: Java 9, JUnit 5, General, Gradle and PHP</title>
+	<guid isPermaLink="false">http://eclipsehowl.wordpress.com/?p=1269</guid>
+	<link>https://eclipsehowl.wordpress.com/2017/11/11/eclipse-oxygen-1a-ide-improvements-java-9-junit-5-general-gradle-and-php/</link>
+	<description>&lt;p&gt;Oxygen.1a (4.7.1a) was released two weeks after Oxygen.1 (4.7.1) on October 11, 2017. Oxygen.1 includes bug fixes and minor improvements. Since Oxygen.1a, the Eclipse IDE runs out of the box with Java 9 and supports development for Java 9 as well as testing with JUnit 5. Many thanks to all of you who have contributed in any way.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/playlist?list=PLnh_8hTD4yvnhXSttuewEKgKkmlIj_ND-&quot;&gt;As usual&lt;/a&gt; I made a short video that shows some improvements in action:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8&quot;&gt;&lt;img alt=&quot;Eclipse Oxygen.1a IDE Improvements: Java 9, JUnit 5, General, Gradle and PHP&quot; class=&quot;alignnone size-full wp-image-1149&quot; height=&quot;253&quot; src=&quot;https://eclipsehowl.files.wordpress.com/2017/11/eclipse_oxygen_1_ide_improvements.png?w=450&amp;amp;h=253&quot; width=&quot;450&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=37s&quot;&gt;Java 9&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;(see also &lt;a href=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/#java-9&quot;&gt;Eclipse Project 4.7.1a New and Noteworthy – Java 9&lt;/a&gt; and &lt;a href=&quot;https://wiki.eclipse.org/Java9/Examples&quot;&gt;Eclipse Wiki – Java 9 Examples&lt;/a&gt;)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=37s&quot; rel=&quot;noopener&quot;&gt;0:37 Creation of a Java 9 application that consists of two modules&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=2m5s&quot; rel=&quot;noopener&quot;&gt;2:05 Exporting the application to JARs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=2m21s&quot; rel=&quot;noopener&quot;&gt;2:21 Running the exported application from the command line&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=3m50s&quot;&gt;JUnit 5&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;(see also &lt;a href=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support&quot;&gt;Eclipse Project 4.7.1a New and Noteworthy – JUnit 5&lt;/a&gt;)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=3m54s&quot; rel=&quot;noopener&quot;&gt;3:54 New Junit 5 alias Jupiter test case&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=4m8s&quot; rel=&quot;noopener&quot;&gt;4:08 &lt;code&gt;assertThrows(...)&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=4m32s&quot; rel=&quot;noopener&quot;&gt;4:32 &lt;code&gt;assertAll(...)&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=4m48s&quot; rel=&quot;noopener&quot;&gt;4:48 &lt;code&gt;@DisplayName&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=4m55s&quot; rel=&quot;noopener&quot;&gt;4:55 &lt;code&gt;@Disabled&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=5m&quot; rel=&quot;noopener&quot;&gt;5:00 &lt;code&gt;@ParameterizedTest&lt;/code&gt; with &lt;code&gt;@ValueSource&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=5m21s&quot; rel=&quot;noopener&quot;&gt;5:21 &lt;code&gt;@ParameterizedTest&lt;/code&gt; with &lt;code&gt;@CsvSource&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=5m34s&quot; rel=&quot;noopener&quot;&gt;5:34 &lt;code&gt;@TestFactory&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=5m55s&quot; rel=&quot;noopener&quot;&gt;5:55 &lt;code&gt;@Tag&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=6m7s&quot; rel=&quot;noopener&quot;&gt;6:07 &lt;code&gt;@Nested&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=6m26s&quot;&gt;General&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;(see also &lt;a href=&quot;https://bugs.eclipse.org/bugs/buglist.cgi?classification=Eclipse&amp;amp;target_milestone=4.7.1&amp;amp;target_milestone=4.7.1a&amp;amp;order=votes%20DESC&quot;&gt;in Eclipse 4.7.1/4.7.1a closed bugs&lt;/a&gt;)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=6m28s&quot; rel=&quot;noopener&quot;&gt;6:28 Bug in three-way compare editor has been fixed&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=6m50s&quot; rel=&quot;noopener&quot;&gt;6:50 RSS Feed reader&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=7m40s&quot; rel=&quot;noopener&quot;&gt;7:40 Dark theme improvements&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=7m54s&quot;&gt;Gradle&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;(see also &lt;a href=&quot;https://projects.eclipse.org/projects/tools.buildship/reviews/2.1.0-release-review&quot;&gt;Eclipse Buildship 2.1.0 New and Noteworthy&lt;/a&gt;)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=7m59s&quot; rel=&quot;noopener&quot;&gt;7:59 Settings on run configuration, project and project level&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=8m12s&quot; rel=&quot;noopener&quot;&gt;8:12 Build scans&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=8m36s&quot;&gt;PHP&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;(see also &lt;a href=&quot;https://bugs.eclipse.org/bugs/buglist.cgi?list_id=16397460&amp;amp;product=PDT&amp;amp;query_format=advanced&amp;amp;target_milestone=5.1&quot;&gt;in PDT 5.1 closed bugs&lt;/a&gt;)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=7m59s&quot; rel=&quot;noopener&quot;&gt;8:45 &lt;code&gt;true&lt;/code&gt;, &lt;code&gt;false&lt;/code&gt; and &lt;code&gt;null&lt;/code&gt; as constants in lower-case only&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=9m3s&quot; rel=&quot;noopener&quot;&gt;9:03 PHPDoc is now correctly generated also for boolean parameters&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://youtu.be/wI3VC1lhbK8?t=9m7s&quot; rel=&quot;noopener&quot;&gt;9:07 Generate getters for a boolean field: prefix &lt;em&gt;is&lt;/em&gt; instead of &lt;em&gt;get&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;More details about Java 9, JUnit 5 and other Eclipse topics can be seen in the recently uploaded &lt;a href=&quot;https://www.youtube.com/playlist?list=PLy7t4z5SYNaSGuPFhGykvEalf5xyb9y5m&quot;&gt;177 EclipseCon Europe 2017 videos with a total duration of more than 3 days and 19 hours&lt;/a&gt;.&lt;/p&gt;
+&lt;h4&gt;Next releases (&lt;a href=&quot;http://www.google.com/calendar/embed?src=gchs7nm4nvpm837469ddj9tjlk%40group.calendar.google.com&quot;&gt;calendar&lt;/a&gt; / &lt;a href=&quot;http://www.google.com/calendar/ical/gchs7nm4nvpm837469ddj9tjlk%40group.calendar.google.com/public/basic.ics&quot;&gt;ICAL&lt;/a&gt;):&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.google.com/calendar/event?eid=MWlrcnVqdjF1ZHY4Ymg2N3JjMHZlcW0wOXYgZ2NoczdubTRudnBtODM3NDY5ZGRqOXRqbGtAZw&quot;&gt;Oxygen.2 on December 20, 2017&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.google.com/calendar/event?eid=Mm1jajlpa2hncHU4NzJhNzdqMXFwMDM2bDUgZ2NoczdubTRudnBtODM3NDY5ZGRqOXRqbGtAZw&quot;&gt;Oxygen.3 on March 21, 2018&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.google.com/calendar/event?eid=NWI2cXM4MHFzc2IzbHRvYWZhMjVmajJnbzkgZ2NoczdubTRudnBtODM3NDY5ZGRqOXRqbGtAZw&quot;&gt;Photon.0 on June 27, 2018&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&quot;https://wiki.eclipse.org/FAQ_How_do_I_upgrade_Eclipse_IDE%3F&quot;&gt;Upgrade to Eclipse Oxygen.1a&lt;/a&gt; or &lt;a href=&quot;https://www.eclipse.org/downloads/eclipse-packages/&quot;&gt;download Eclipse Oxygen.1a&lt;/a&gt; and happy coding!&lt;/p&gt;&lt;br /&gt;  &lt;a href=&quot;http://feeds.wordpress.com/1.0/gocomments/eclipsehowl.wordpress.com/1269/&quot; rel=&quot;nofollow&quot;&gt;&lt;img alt=&quot;&quot; border=&quot;0&quot; src=&quot;http://feeds.wordpress.com/1.0/comments/eclipsehowl.wordpress.com/1269/&quot; /&gt;&lt;/a&gt; &lt;img alt=&quot;&quot; border=&quot;0&quot; height=&quot;1&quot; src=&quot;https://pixel.wp.com/b.gif?host=eclipsehowl.wordpress.com&amp;amp;blog=11064764&amp;amp;post=1269&amp;amp;subd=eclipsehowl&amp;amp;ref=&amp;amp;feed=1&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Sat, 11 Nov 2017 13:44:31 +0000</pubDate>
+</item>
+<item>
+	<title>EclipseCon Europe 2017: Replay EclipseCon Europe 2017</title>
+	<guid isPermaLink="false">https://www.eclipsecon.org/europe2017/news/4248 at https://www.eclipsecon.org/europe2017</guid>
+	<link>https://www.eclipsecon.org/europe2017/news/replay-eclipsecon-europe-2017</link>
+	<description>&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;If you missed a talk at this year's conference, there's a good chance that you'll be able to replay it. You'll find most of the talks from this year are online.&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-field-news-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;https://www.eclipsecon.org/europe2017/news/replay-eclipsecon-europe-2017&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;img-responsive block-center&quot; height=&quot;250&quot; src=&quot;https://www.eclipsecon.org/europe2017/sites/default/files/styles/solstice_news_-_default_-_thumbnail/public/news/Screen%20Shot%202017-11-10%20at%202.05.25%20PM.png?itok=wpfHn44i&quot; width=&quot;250&quot; /&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</description>
+	<pubDate>Fri, 10 Nov 2017 13:04:51 +0000</pubDate>
+</item>
+<item>
+	<title>Kichwa Coders: Debug Protocol vs Language Server Protocol</title>
+	<guid isPermaLink="false">http://kichwacoders.com/?p=3103</guid>
+	<link>https://kichwacoders.com/2017/11/08/debug-protocol-vs-language-server-protocol/</link>
+	<description>&lt;p&gt;It is safe to say that the &lt;a href=&quot;https://kichwacoders.com/2017/11/03/the-language-server-protocol-will-revolutionize-how-you-code/&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;language server protocol (LSP) is the future of developer tools&lt;/a&gt;.  When it comes to the equivalent for debug, &lt;a href=&quot;https://kichwacoders.com/2017/07/28/what-about-a-common-debug-protocol/&quot;&gt;the debug protocol&lt;/a&gt; is ‘LSP for debuggers’. It is a useful tagline but here are three key differences to be aware of:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;State – &lt;/strong&gt;the big mindshift with LSP is that servers are stateless. The clients store all the state e.g. the files themselves and settings (what language, classpath, etc). Any state kept on the serverside (e.g. the index) is usually purely for performance reasons. What this means is that, for instance, servers can be restarted and carry on seamlessly without having to know anything of what happened in the system beforehand. On the other hand, the debug protocol is not stateless, servers need to know all sorts of state and sequences of what has happened, so the design space is different for this protocol.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;JSON RPC 2.0 Spec (and cancellable requests)&lt;/strong&gt; – The LSP defines JSON-RPC messages for requests, responses and notifications. The debug protocol was created before JSON RPC 2.0 spec was finalized, debug protocol uses a similar structure, but it is not cross compatible. For example, the JSON field name for the method to call is &lt;strong&gt;command&lt;/strong&gt; in debug protocol and &lt;strong&gt;method&lt;/strong&gt; in JSON RPC 2.0. The type of message (event, request, or response) is explicit in DSP in the &lt;strong&gt;type&lt;/strong&gt; field, but is implicit in JSON RPC 2.0 (based on presence of the combination of &lt;strong&gt;method&lt;/strong&gt;, &lt;strong&gt;id&lt;/strong&gt;, &lt;strong&gt;result&lt;/strong&gt; and &lt;strong&gt;error &lt;/strong&gt;fields). However using a library like &lt;a href=&quot;https://github.com/eclipse/lsp4j/blob/master/documentation/jsonrpc.md&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;org.eclipse.lsp4j.jsonrpc&lt;/a&gt; can hide such differences and provide equivalent higher level abstractions (like Java interfaces) and leave the library to handle the differences. The LSP has a nice feature, cancellable requests, that is an extension to JSON RPC2.0 that is also not available in the debug protocol: &lt;a href=&quot;https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#-cancellation-support&quot;&gt;https://github.com/Microsoft/language-server-protocol/blob/master/protocol.md#-cancellation-support&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ubiquity&lt;/strong&gt; – although the LSP was defined originally for use in VS Code do you know that the 2 flagship languages for VS Code are not based on LSP? Typescript and javascript language tooling is not done using LSP. On the other hand the debug protocol does underpin all the debugger implementations in VS Code, including the flagship node debuggers for V8 and Chrome.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;All that being said, it’s worth repeating the common benefits of both protocols which are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;good separation of client/server&lt;/li&gt;
+&lt;li&gt;building the tooling once and reusing it across IDEs and editors i.e. vs code, eclipse, atom, etc&lt;/li&gt;
+&lt;li&gt;better unit/isolated testing&lt;/li&gt;
+&lt;li&gt;write in language most suited to the job&lt;/li&gt;
+&lt;li&gt;more effective way for tool developers to keep pace with underlying tools&lt;/li&gt;
+&lt;/ul&gt;&lt;br /&gt;  &lt;a href=&quot;http://feeds.wordpress.com/1.0/gocomments/kichwacoders.wordpress.com/3103/&quot; rel=&quot;nofollow&quot;&gt;&lt;img alt=&quot;&quot; border=&quot;0&quot; src=&quot;http://feeds.wordpress.com/1.0/comments/kichwacoders.wordpress.com/3103/&quot; /&gt;&lt;/a&gt; &lt;img alt=&quot;&quot; border=&quot;0&quot; height=&quot;1&quot; src=&quot;https://pixel.wp.com/b.gif?host=kichwacoders.com&amp;amp;blog=68353182&amp;amp;post=3103&amp;amp;subd=kichwacoders&amp;amp;ref=&amp;amp;feed=1&quot; width=&quot;1&quot; /&gt;</description>
+	<pubDate>Wed, 08 Nov 2017 13:09:47 +0000</pubDate>
+</item>
+<item>
+	<title>InfoQ Eclipse feed: Accelerating the Adoption of Java Microservices with Eclipse MicroProfile</title>
+	<guid isPermaLink="true">http://www.infoq.com/news/2017/11/jax-london-microprofile?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=Eclipse</guid>
+	<link>http://www.infoq.com/news/2017/11/jax-london-microprofile?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=Eclipse</link>
+	<description>&lt;img src=&quot;https://res.infoq.com/news/2017/11/jax-london-microprofile/en/headerimage/java  -1510649612807.jpg&quot; /&gt;&lt;p&gt;InfoQ caught up with Emily Jiang from IBM to hear about the new Eclipse MicroProfile project and the new release, with extended fault tolerance and other new features. &lt;/p&gt; &lt;i&gt;By Monica Beckwith&lt;/i&gt;</description>
+	<pubDate>Wed, 08 Nov 2017 06:30:00 +0000</pubDate>
+</item>
+<item>
+	<title>Lorenzo Bettini: How to add Eclipse launcher in Gnome dock</title>
+	<guid isPermaLink="false">http://www.lorenzobettini.it/?p=982</guid>
+	<link>http://www.lorenzobettini.it/2017/11/how-to-add-eclipse-launcher-in-gnome-dock/</link>
+	<description>&lt;p&gt;In this post I’ll show how to add an Eclipse launcher as a favorite (pinned) application in the Gnome dock (I’m using Ubuntu Artful). This post is inspired by &lt;a href=&quot;http://blog.ttoine.net/en/2016/06/30/how-to-add-eclipse-neon-launcher-in-gnu-linux-menus-and-launchers/&quot; rel=&quot;noopener&quot; target=&quot;_blank&quot;&gt;http://blog.ttoine.net/en/2016/06/30/how-to-add-eclipse-neon-launcher-in-gnu-linux-menus-and-launchers/&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;First of all, you need to create a .desktop file, where you need to specify the full path of your Eclipse installation:&lt;/p&gt;&lt;pre class=&quot;crayon-plain-tag&quot;&gt;[Desktop Entry]
+Version=Oxygen
+Name=Eclipse Java
+Comment=Eclipse is an IDE
+Exec=/home/bettini/eclipse/java-latest-released/eclipse/eclipse
+Icon=/home/bettini/eclipse/java-latest-released/eclipse/icon.xpm
+Terminal=false
+Type=Application
+Categories=Utility;Application;Development;&lt;/pre&gt;&lt;p&gt;This is relative to my installation of Eclipse which is in the folder &lt;strong&gt;/home/bettini/eclipse/java-latest-released/eclipse&lt;/strong&gt;, note the executable “eclipse” and the “icon.xpm”. The name “&lt;strong&gt;Eclipse Java&lt;/strong&gt;” is what will appear as the launcher name both in Gnome applications and later in the dock.&lt;/p&gt;
+&lt;p&gt;Make this file executable.&lt;/p&gt;
+&lt;p&gt;Copy this file in your home folder in &lt;strong&gt;.local/share/applications&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Now in Gnome Activities search for such a launcher and it should appear:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.lorenzobettini.it/2017/11/how-to-add-eclipse-launcher-in-gnome-dock/screenshot-from-2017-11-07-13-50-05/&quot; rel=&quot;attachment wp-att-984&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;aligncenter size-full wp-image-984&quot; height=&quot;208&quot; src=&quot;http://www.lorenzobettini.it/wp-content/uploads/2017/11/Screenshot-from-2017-11-07-13-50-05.png&quot; width=&quot;390&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Select it and make sure that Eclipse effectively runs.&lt;/p&gt;
+&lt;p&gt;Unfortunately, in the dock, there’s no contextual menu for you to add it as a favorite and pin it to the dock:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.lorenzobettini.it/2017/11/how-to-add-eclipse-launcher-in-gnome-dock/screenshot-from-2017-11-07-13-54-09/&quot; rel=&quot;attachment wp-att-986&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;aligncenter size-full wp-image-986&quot; height=&quot;233&quot; src=&quot;http://www.lorenzobettini.it/wp-content/uploads/2017/11/Screenshot-from-2017-11-07-13-54-09.png&quot; width=&quot;400&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;But you can still add it to the dock favorites (and thus pin it there) by using the corresponding contextual menu that is available when the launcher appears in the Activities:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.lorenzobettini.it/2017/11/how-to-add-eclipse-launcher-in-gnome-dock/screenshot-from-2017-11-07-13-56-36/&quot; rel=&quot;attachment wp-att-988&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;aligncenter size-full wp-image-988&quot; height=&quot;229&quot; src=&quot;http://www.lorenzobettini.it/wp-content/uploads/2017/11/Screenshot-from-2017-11-07-13-56-36.png&quot; width=&quot;483&quot; /&gt;&lt;/a&gt;And there you go: the Eclipse launcher is now on your dock and it’s there to stay &lt;img alt=&quot;🙂&quot; class=&quot;wp-smiley&quot; src=&quot;https://s.w.org/images/core/emoji/2.3/72x72/1f642.png&quot; style=&quot;height: 1em;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.lorenzobettini.it/2017/11/how-to-add-eclipse-launcher-in-gnome-dock/screenshot-from-2017-11-07-13-57-38/&quot; rel=&quot;attachment wp-att-989&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;aligncenter size-full wp-image-989&quot; height=&quot;249&quot; src=&quot;http://www.lorenzobettini.it/wp-content/uploads/2017/11/Screenshot-from-2017-11-07-13-57-38.png&quot; width=&quot;114&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;div class=&quot;sociable&quot;&gt;&lt;div class=&quot;sociable_tagline&quot;&gt;Be Sociable, Share!&lt;/div&gt;&lt;ul class=&quot;clearfix&quot;&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://twitter.com/intent/tweet?text=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock%20-%20http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F%20&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Twitter&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://www.facebook.com/share.php?u=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;t=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Facebook&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; href=&quot;https://mail.google.com/mail/?view=cm&amp;amp;fs=1&amp;amp;to&amp;amp;su=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;body=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;ui=2&amp;amp;tf=1&amp;amp;shva=1&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;email&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; rel=&quot;nofollow&quot; title=&quot;Add to favorites - doesn't work in Chrome&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://www.stumbleupon.com/submit?url=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;StumbleUpon&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://delicious.com/post?url=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;notes=In%20this%20post%20I%27ll%20show%20how%20to%20add%20an%20Eclipse%20launcher%20as%20a%20favorite%20%28pinned%29%20application%20in%20the%20Gnome%20dock%20%28I%27m%20using%20Ubuntu%20Artful%29.%20This%20post%20is%20inspired%20by%C2%A0http%3A%2F%2Fblog.ttoine.net%2Fen%2F2016%2F06%2F30%2Fhow-to-add-eclipse-neon-launcher-in-gnu-linux-menus-a&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Delicious&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://www.google.com/reader/link?url=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;srcURL=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;srcTitle=Lorenzo+Bettini+My+Home+Page&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Google Reader&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://www.linkedin.com/shareArticle?mini=true&amp;amp;url=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;source=Lorenzo+Bettini+My+Home+Page&amp;amp;summary=In%20this%20post%20I%27ll%20show%20how%20to%20add%20an%20Eclipse%20launcher%20as%20a%20favorite%20%28pinned%29%20application%20in%20the%20Gnome%20dock%20%28I%27m%20using%20Ubuntu%20Artful%29.%20This%20post%20is%20inspired%20by%C2%A0http%3A%2F%2Fblog.ttoine.net%2Fen%2F2016%2F06%2F30%2Fhow-to-add-eclipse-neon-launcher-in-gnu-linux-menus-a&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;LinkedIn&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://www.blinklist.com/index.php?Action=Blink/addblink.php&amp;amp;Url=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;Title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&quot; rel=&quot;nofollow&quot; style=&quot;background-position: 0px 0px;&quot; target=&quot;_blank&quot; title=&quot;BlinkList&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a rel=&quot;nofollow&quot; style=&quot;cursor: pointer;&quot;&gt;&lt;img src=&quot;http://www.lorenzobettini.it/wp-content/plugins/sociable/images/more.png&quot; /&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;div id=&quot;sociable-post-982&quot; style=&quot;display: none;&quot;&gt;   
+
+    &lt;div id=&quot;sociable&quot; style=&quot;display: block;&quot;&gt;
+
+
+
+		&lt;div class=&quot;popup&quot;&gt;
+
+			&lt;div class=&quot;content&quot;&gt;
+
+				&lt;ul&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://www.myspace.com/Modules/PostTo/Pages/?u=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;t=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Myspace&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://digg.com/submit?phase=2&amp;amp;url=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;bodytext=In%20this%20post%20I%27ll%20show%20how%20to%20add%20an%20Eclipse%20launcher%20as%20a%20favorite%20%28pinned%29%20application%20in%20the%20Gnome%20dock%20%28I%27m%20using%20Ubuntu%20Artful%29.%20This%20post%20is%20inspired%20by%C2%A0http%3A%2F%2Fblog.ttoine.net%2Fen%2F2016%2F06%2F30%2Fhow-to-add-eclipse-neon-launcher-in-gnu-linux-menus-a&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Digg&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://reddit.com/submit?url=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Reddit&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://www.google.com/bookmarks/mark?op=edit&amp;amp;bkmk=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;annotation=In%20this%20post%20I%27ll%20show%20how%20to%20add%20an%20Eclipse%20launcher%20as%20a%20favorite%20%28pinned%29%20application%20in%20the%20Gnome%20dock%20%28I%27m%20using%20Ubuntu%20Artful%29.%20This%20post%20is%20inspired%20by%C2%A0http%3A%2F%2Fblog.ttoine.net%2Fen%2F2016%2F06%2F30%2Fhow-to-add-eclipse-neon-launcher-in-gnu-linux-menus-a&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Google Bookmarks&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://news.ycombinator.com/submitlink?u=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;t=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;HackerNews&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://reporter.es.msn.com/?fn=contribute&amp;amp;Title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;URL=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;cat_id=6&amp;amp;tag_id=31&amp;amp;Remark=In%20this%20post%20I%27ll%20show%20how%20to%20add%20an%20Eclipse%20launcher%20as%20a%20favorite%20%28pinned%29%20application%20in%20the%20Gnome%20dock%20%28I%27m%20using%20Ubuntu%20Artful%29.%20This%20post%20is%20inspired%20by%C2%A0http%3A%2F%2Fblog.ttoine.net%2Fen%2F2016%2F06%2F30%2Fhow-to-add-eclipse-neon-launcher-in-gnu-linux-menus-a&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;MSNReporter&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://sphinn.com/index.php?c=post&amp;amp;m=submit&amp;amp;link=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Sphinn&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://posterous.com/share?linkto=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;title=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;selection=In%20this%20post%20I%27ll%20show%20how%20to%20add%20an%20Eclipse%20launcher%20as%20a%20favorite%20%28pinned%29%20application%20in%20the%20Gnome%20dock%20%28I%27m%20using%20Ubuntu%20Artful%29.%20This%20post%20is%20inspired%20by%C2%A0http%3A%2F%2Fblog.ttoine.net%2Fen%2F2016%2F06%2F30%2Fhow-to-add-eclipse-neon-launcher-in-gnu-linux-menus-a&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Posterous&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;li style=&quot;width: 16px;&quot;&gt;&lt;a class=&quot;option1_16&quot; href=&quot;http://www.tumblr.com/share?v=3&amp;amp;u=http%3A%2F%2Fwww.lorenzobettini.it%2F2017%2F11%2Fhow-to-add-eclipse-launcher-in-gnome-dock%2F&amp;amp;t=How%20to%20add%20Eclipse%20launcher%20in%20Gnome%20dock&amp;amp;s=In%20this%20post%20I%27ll%20show%20how%20to%20add%20an%20Eclipse%20launcher%20as%20a%20favorite%20%28pinned%29%20application%20in%20the%20Gnome%20dock%20%28I%27m%20using%20Ubuntu%20Artful%29.%20This%20post%20is%20inspired%20by%C2%A0http%3A%2F%2Fblog.ttoine.net%2Fen%2F2016%2F06%2F30%2Fhow-to-add-eclipse-neon-launcher-in-gnu-linux-menus-a&quot; rel=&quot;nofollow&quot; target=&quot;_blank&quot; title=&quot;Tumblr&quot;&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;			
+
+			&lt;/div&gt;        
+
+		  &lt;a class=&quot;close&quot; style=&quot;cursor: pointer;&quot;&gt;
+
+		  &lt;img src=&quot;http://www.lorenzobettini.it/wp-content/plugins/sociable/images/closelabel.png&quot; title=&quot;close&quot; /&gt;
+
+		  &lt;/a&gt;
+
+		&lt;/div&gt;
+
+	&lt;/div&gt; 
+
+  &lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;sociable&quot; style=&quot;float: none;&quot;&gt;&lt;ul class=&quot;clearfix&quot;&gt;&lt;li id=&quot;Twitter_Counter&quot;&gt;&lt;a class=&quot;twitter-share-button&quot; href=&quot;https://twitter.com/share&quot;&gt;Tweet&lt;/a&gt;&lt;/li&gt;&lt;li id=&quot;Facebook_Counter&quot;&gt;&lt;/li&gt;&lt;li id=&quot;Google_p&quot;&gt;&lt;/li&gt;&lt;li id=&quot;LinkedIn_Counter&quot;&gt;&lt;/li&gt;&lt;li id=&quot;StumbleUpon_Counter&quot;&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;</description>
+	<pubDate>Tue, 07 Nov 2017 13:00:55 +0000</pubDate>
+</item>
+<item>
+	<title>Fabio Zadrozny: Macro keyboard recording on Eclipse / LiClipse 4.3.1</title>
+	<guid isPermaLink="false">tag:blogger.com,1999:blog-7855001383687474475.post-8837703511195115412</guid>
+	<link>http://liclipse.blogspot.com/2017/11/macro-keyboard-recording-on-eclipse.html</link>
+	<description>&lt;div style=&quot;text-align: justify;&quot;&gt;I'm currently working on a new engine for record and playback of&lt;b&gt; keyboard macros in Eclipse&lt;/b&gt;. It's currently available as a project in the Eclipse incubation (see &lt;a href=&quot;https://wiki.eclipse.org/E4/Macros&quot;&gt;https://wiki.eclipse.org/E4/Macros&lt;/a&gt; for more details and how to install it to Eclipse) and I hope it'll be a part of Eclipse 4.8 -- the current version should be stable already, but it needs some hardening, so, feedback is appreciated ;)&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;br /&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;Also, I decided to integrate it into &lt;a href=&quot;http://www.liclipse.com/&quot;&gt;LiClipse&lt;/a&gt; too (so, the new 4.3.1 release of LiClipse adds support to record and playback of macros).&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;br /&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;The idea is that this will fix a long standing (and popular) feature request in Eclipse -- &lt;a href=&quot;https://bugs.eclipse.org/bugs/show_bug.cgi?id=8519&quot;&gt;https://bugs.eclipse.org/bugs/show_bug.cgi?id=8519&lt;/a&gt; -- and a pet peeve on mine too as it's not uncommon for me to copy a file to notepad++ to make a record/playback and then copy it back to Eclipse... this really should be builtin (as a note, the rectangular edition in Eclipse, &lt;a href=&quot;http://www.liclipse.com/multi_edition_video.html&quot;&gt;multiple cursors in LiClipse&lt;/a&gt;  and regexps in the find dialog do solve a number of use-cases, but I find that record/playback on some cases is invaluable).&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;br /&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;Now, why not just use &lt;a href=&quot;https://sourceforge.net/projects/practicalmacro/&quot;&gt;https://sourceforge.net/projects/practicalmacro/&lt;/a&gt;? Well, I've used it some times but unfortunately I didn't find it as stable as I wanted -- it's really hard to come up with a stable record of what's happening in Eclipse -- so, I think an effective solution must really be builtin to Eclipse in order to be effective.&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;br /&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;Also, in order to be feasible, there are some limitations in the scope on what it should accomplish: it's not a general Eclipse IDE record/playback, but rather a &lt;b&gt;record/playback in the scope of an editor&lt;/b&gt;, so, it should properly record/playback the keystrokes in the editor and the resulting actions from such commands (although the implementation is done in a way which could support more general recording in Eclipse, but this would require changing many other parts of the IDE to be aware of the macro record/playback, so, I'm not sure it'd be feasible).&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;br /&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;This means that some particular implementations which don't work through commands will have to be adapted -- so, for instance, record in the find dialog currently doesn't work because it doesn't work through commands and there's no way to listen that a find action was actually triggered from there... right now, the workaround is using the &lt;b&gt;Incremental Find (Ctrl+J)&lt;/b&gt; and &lt;b&gt;Find Next (Ctrl+K)&lt;/b&gt; commands when on record mode (my idea is taking a look at it after the macro record/playback engine is integrated to core Eclipse as I don't think it's a blocker due to having a proper workaround through actual commands), the focus now is making it solid for record and playback of commands which are related to the text editor.&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;br /&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;So, that's it, hope you enjoy macro recording on &lt;a href=&quot;http://www.liclipse.com/download.html&quot;&gt;LiClipse 4.3.1&lt;/a&gt; -- and hopefully on Eclipse itself later on ;)&lt;/div&gt;</description>
+	<pubDate>Tue, 07 Nov 2017 12:21:46 +0000</pubDate>
+	<author>noreply@blogger.com (Fabio Zadrozny)</author>
+</item>
+<item>
+	<title>JBoss Tools Team: JBoss Tools and Red Hat Developer Studio for Eclipse Oxygen.1a</title>
+	<guid isPermaLink="true">https://tools.jboss.org/blog/11.1.0.ga-for-oxygen.1a.html</guid>
+	<link>https://tools.jboss.org/blog/11.1.0.ga-for-oxygen.1a.html</link>
+	<description>&lt;div&gt;&lt;div id=&quot;preamble&quot;&gt;
+      &lt;div class=&quot;sectionbody&quot;&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;&lt;a href=&quot;https://tools.jboss.org/downloads/jbosstools/oxygen/4.5.1.Final.html&quot;&gt;JBoss Tools 4.5.1&lt;/a&gt; and &lt;a href=&quot;https://tools.jboss.org/downloads/devstudio/oxygen/11.1.0.GA.html&quot;&gt;Red Hat JBoss Developer Studio 11.1&lt;/a&gt; for Eclipse Oxygen.1a are here waiting for you. Check it out!&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;devstudio11&quot; src=&quot;https://tools.jboss.org/blog/images/devstudio11.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect1&quot;&gt;
+      &lt;h2 id=&quot;installation&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#installation&quot;&gt;&lt;/a&gt;Installation&lt;/h2&gt;
+      &lt;div class=&quot;sectionbody&quot;&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;JBoss Developer Studio comes with everything pre-bundled in its installer. Simply download it from our &lt;a href=&quot;https://www.jboss.org/products/devstudio.html&quot;&gt;JBoss Products page&lt;/a&gt; and run it like this:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;literalblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;pre&gt;java -jar jboss-devstudio-&amp;lt;installername&amp;gt;.jar&lt;/pre&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;JBoss Tools or Bring-Your-Own-Eclipse (BYOE) JBoss Developer Studio require a bit more:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;This release requires at least Eclipse 4.7 (Oxygen) but we recommend
+      using the latest &lt;a href=&quot;http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/oxygen1a&quot;&gt;Eclipse 4.7.1a Oxygen JEE Bundle&lt;/a&gt; since then you get most of the dependencies preinstalled.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Once you have installed Eclipse, you can either find us on the Eclipse Marketplace under &quot;JBoss Tools&quot; or &quot;Red Hat JBoss Developer Studio&quot;.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;For JBoss Tools, you can also use our update site directly.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;literalblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;pre&gt;http://download.jboss.org/jbosstools/oxygen/stable/updates/&lt;/pre&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect1&quot;&gt;
+      &lt;h2 id=&quot;what-is-new&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#what-is-new&quot;&gt;&lt;/a&gt;What is new?&lt;/h2&gt;
+      &lt;div class=&quot;sectionbody&quot;&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Our main focus for this release was on adoption of Java9, improvements for container based development and bug fixing.
+      Eclipse Oxygen itself has &lt;a href=&quot;https://www.youtube.com/playlist?list=PLy7t4z5SYNaTM66CahSlkMh5YkndYXMUq&quot;&gt;a lot of new cool stuff&lt;/a&gt; but let me highlight just a few updates in both Eclipse Oxygen and JBoss Tools plugins that I think are worth mentioning.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect2&quot;&gt;
+      &lt;h3 id=&quot;openshift-3&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#openshift-3&quot;&gt;&lt;/a&gt;OpenShift 3&lt;/h3&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;cdk-3-2-server-adapter&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#cdk-3-2-server-adapter&quot;&gt;&lt;/a&gt;CDK 3.2 Server Adapter&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;A new server adapter has been added to support the next generation of CDK 3.2.
+      While the server adapter itself has limited functionality, it is able to start and stop the CDK virtual machine via its minishift binary.
+      Simply hit Ctrl+3 (Cmd+3 on OSX) and type CDK, that will bring up a command to setup and/or launch the CDK server adapter.
+      You should see the old CDK 2 server adapter along with the new CDK 3 one (labeled &lt;strong&gt;Red Hat Container Development Kit 3.2+&lt;/strong&gt; ).&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;cdk3.2 server adapter&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/cdk3.2-server-adapter.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;All you have to do is set the credentials for your Red Hat account, the location of the CDK’s minishift binary file, the type of virtualization hypervisor
+      and an optional CDK profile name.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;cdk3.2 server adapter1&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/cdk3.2-server-adapter1.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Once you’re finished, a new CDK Server adapter will then be created and visible in the Servers view.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;cdk3.2 server adapter2&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/cdk3.2-server-adapter2.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Once the server is started, Docker and OpenShift connections should appear in their respective views, allowing the user to quickly create a new Openshift application and begin developing their AwesomeApp in a highly-replicatable environment.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;cdk3.2 server adapter3&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/cdk3.2-server-adapter3.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;cdk3.2 server adapter4&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/cdk3.2-server-adapter4.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;new-command-to-tune-resource-limits&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#new-command-to-tune-resource-limits&quot;&gt;&lt;/a&gt;New command to tune resource limits&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;A new command has been added to tune resource limits (CPU, memory) on an OpenShift deployment.
+      It’s available for a Service, a DeploymentConfig, a ReplicationController or a Pod.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;To activate it, go the the OpenShift explorer, select the OpenShift resource, right click and select &lt;code&gt;Edit resource limits&lt;/code&gt;.
+      The following dialog will show up:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;edit resource limits&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/edit-resource-limits.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;After you changed the resource limits for this deployment, it will be updated and new pods will be spawned (not for ReplicationController)&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;edit resource limits1&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/edit-resource-limits1.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;discover-docker-registry-url-for-openshift-connections&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#discover-docker-registry-url-for-openshift-connections&quot;&gt;&lt;/a&gt;Discover Docker registry URL for OpenShift connections&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;When an OpenShift connection is created, the Docker registry URL is empty. When the CDK is started through the CDK server adapter, an OpenShift
+      connection is created or updated if a matching OpenShift connection is found. But what if you have several OpenShift connections, the remaining ones
+      will be left with the empty URL.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;You can find the matching Docker registry URL when editing the OpenShift connection through the &lt;code&gt;Discover&lt;/code&gt; button:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;edit connection discover&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/edit-connection-discover.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Click on the &lt;code&gt;Discover&lt;/code&gt; button and the Docker registry URL will be filled if a matching started CDK server adapter is found:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;edit connection discover1&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/edit-connection-discover1.png&quot; width=&quot;600&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;openshift-io-login&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#openshift-io-login&quot;&gt;&lt;/a&gt;OpenShift.io login&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;It is possible to login from JBoss Tools to OpenShift.io. A single account will be maintained per workspace. Once you initially logged onto OpenShift.io, all
+      needed account information (tokens,…​) will be stored securely.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;There are two ways to login onto OpenShift.io:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;through the UI&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;p&gt;via a third party service that will invoke the proper extension point&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect4&quot;&gt;
+      &lt;h5 id=&quot;ui-based-login-to-openshift-io&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#ui-based-login-to-openshift-io&quot;&gt;&lt;/a&gt;UI based login to OpenShift.io&lt;/h5&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;In the toobar, you should see a new icon &lt;span class=&quot;image&quot;&gt;&lt;img alt=&quot;Toolbar&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/osio-16x16.png&quot; /&gt;&lt;/span&gt;. Click on it and it will launch the login.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;If this is the first time you login to OpenShift.io or if you OpenShift.io account tokens are not valid anymore, you should see a browser launched with the following content:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;osio browser&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/osio-browser.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Enter your RHDP login and the browser will then auto-close and an extract (for security reasons) of the OpenShift.io token will be displayed:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;osio token dialog&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/osio-token-dialog.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;This dialog will be also shown if an OpenShift.io account was configured in the workspace and the account information is valid.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect4&quot;&gt;
+      &lt;h5 id=&quot;via-extension-point&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#via-extension-point&quot;&gt;&lt;/a&gt;Via extension point&lt;/h5&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;The OpenShift.io integration can be invoked by a third party service through the &lt;code&gt;org.jboss.tools.openshift.io.code.tokenProvider&lt;/code&gt; extension point.
+      This extension point will perform the same actions as the UI but basically will return an access token for OpenShift.io to the third party service.
+      A detailed explanation of how to use this extension point is described here: &lt;a href=&quot;https://github.com/jbosstools/jbosstools-openshift/wiki/OpenShift.io-token-provider&quot;&gt;Wiki page&lt;/a&gt;&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;You can display the account information using the Eclipse &lt;code&gt;Jboss Tools → OpenShift.io&lt;/code&gt; preference node. If you workspace does not contain an OpenShift.io account yet, you should see the following:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;osio preferences&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/osio-preferences.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;If you have a configured OpenShift.io account, you should see this:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;osio preferences1&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/openshift/images/osio-preferences1.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect2&quot;&gt;
+      &lt;h3 id=&quot;server-tools&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#server-tools&quot;&gt;&lt;/a&gt;Server tools&lt;/h3&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;eap-7-1-server-adapter&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#eap-7-1-server-adapter&quot;&gt;&lt;/a&gt;EAP 7.1 Server Adapter&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;A server adapter has been added to work with EAP 7.1 and Wildfly 11. It’s based on WildFly 11. This new server adapter includes support for incremental management
+      deployment like it’s upstream WildFly 11 counterpart.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect2&quot;&gt;
+      &lt;h3 id=&quot;fuse-tooling&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#fuse-tooling&quot;&gt;&lt;/a&gt;Fuse Tooling&lt;/h3&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;global-beans-improve-support-for-bean-references&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#global-beans-improve-support-for-bean-references&quot;&gt;&lt;/a&gt;Global Beans: improve support for Bean references&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;It is now possible to set Bean references from User Interface when creating a new Bean:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;Create Factory Bean Reference&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/fusetools/images/factoryBeanReference.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Editing Bean references is also now available on the properties view when editing an existing Bean:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;Edit Factory Bean Reference&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/fusetools/images/factoryBeanReference-propertiesView.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Additional validation has been added to help users avoid mixing Beans defined with class names and Beans defined referencing other beans.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;apache-karaf-4-x-server-adapter&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#apache-karaf-4-x-server-adapter&quot;&gt;&lt;/a&gt;Apache Karaf 4.x Server Adapter&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;We are happy to announce the addition of new Apache Karaf server adapters. You can now download and install Apache Karaf 4.0 and 4.1 from within your development environment.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;Apache Karaf 4x Server Adapters&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/fusetools/images/karaf4xadapters.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;switch-apache-camel-version&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#switch-apache-camel-version&quot;&gt;&lt;/a&gt;Switch Apache Camel Version&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;You can now change the Apache Camel version used in your project. To do that you invoke the context menu of the project in the project explorer and navigate into the &lt;code&gt;Configure&lt;/code&gt; menu. There you will find the menu entry called &lt;code&gt;Change Camel Version&lt;/code&gt; which
+      will guide you through this process.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;Switch Camel Version&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/fusetools/images/switchcamelversion.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;improved-validation&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#improved-validation&quot;&gt;&lt;/a&gt;Improved Validation&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;The validation in the editor has been improved to find containers which lack mandatory child elements. (for instance a Choice without a child element)&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;Improved validation&quot; src=&quot;https://tools.jboss.org/documentation/whatsnew/fusetools/images/containerchildvalidation.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect2&quot;&gt;
+      &lt;h3 id=&quot;java-developement-tools-jdt&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#java-developement-tools-jdt&quot;&gt;&lt;/a&gt;Java Developement Tools (JDT)&lt;/h3&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;support-for-java-9&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#support-for-java-9&quot;&gt;&lt;/a&gt;Support for Java™ 9&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Java™ 9 is here, and JDT fully supports it:&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;The Eclipse compiler for Java (ECJ) implements all the new Java 9 language enhancements&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+      &lt;p&gt;Updated significant features to support Java Modules, such as compiler, search and many editor features.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;admonitionblock note&quot;&gt;
+      &lt;table&gt;
+      &lt;tbody&gt;&lt;tr&gt;
+      &lt;td class=&quot;icon&quot;&gt;
+      &lt;i class=&quot;fa icon-note&quot; title=&quot;Note&quot;&gt;&lt;/i&gt;
+      &lt;/td&gt;
+      &lt;td class=&quot;content&quot;&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;It is not mandatory to run Eclipse with Java Runtime 9 to get the Java 9 support. However, a Java runtime 9
+      is required to be on a project’s build path to compile a modular project against the system modules.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;/tbody&gt;&lt;/table&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;When a Java Runtime 9 is added to a project’s build path, the system modules are listed under the System library in the package explorer&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;java9 package explorer&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/java9-package-explorer.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;An existing non-modular Java project can be quickly converted to a module by creating a module-info.java for that project.
+      This feature can be availed once the project has been moved to compliance 9&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;java9 create module&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/java9-create-module.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;With Java 9 support, a library or a container can now be added to the module path as opposed to the classpath&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;java9 module path&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/java9-module-path.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Once a module has been added to a project’s module path, its encapsulation properties can further be modified by clicking on the &lt;strong&gt;Is Modular&lt;/strong&gt; option
+      and editing the Module properties. The following example shows how module module.one can can be made to export its packages in the context of the current Java project&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;java9 module properties&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/java9-module-properties.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Java search now includes a new search scope - Module&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;java9 module search&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/java9-module-search.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect3&quot;&gt;
+      &lt;h4 id=&quot;support-for-junit-5&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#support-for-junit-5&quot;&gt;&lt;/a&gt;Support for JUnit 5&lt;/h4&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;JUnit 5 support is now available in Eclipse.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Create a new JUnit Jupiter test via *New JUnit Test Case wizard:&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;new junit jupiter test&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/new-junit-jupiter-test.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Add JUnit 5 library to the build path&lt;/p&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;New JUnit Test Case wizard offers to add it while creating a new JUnit Jupiter test&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;add junit 5 lib&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/add-junit-5-lib.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Quick Fix &lt;strong&gt;(Ctrl+1)&lt;/strong&gt; proposal on &lt;strong&gt;@Test&lt;/strong&gt;, &lt;strong&gt;@TestFactory&lt;/strong&gt;, &lt;strong&gt;@ParameterizedTest&lt;/strong&gt; and &lt;strong&gt;@RepeatedTest&lt;/strong&gt; annotations&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;add junit 5 lib quick fix&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/add-junit-5-lib-quick-fix.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Add JUnit library in Java Build Path dialog&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;add junit 5 lib java build path&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/add-junit-5-lib-java-build-path.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Create a JUnit Jupiter test method with the new &lt;strong&gt;test_jupiter&lt;/strong&gt; template&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;junit jupiter test method template&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/junit-jupiter-test-method-template.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Create a &lt;strong&gt;@TestFactory&lt;/strong&gt; method with the new &lt;strong&gt;test_factory&lt;/strong&gt; template&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;junit jupiter test factory template&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/junit-jupiter-test-factory-template.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;JUnit Jupiter’s &lt;strong&gt;Assertions&lt;/strong&gt;, &lt;strong&gt;Assumptions&lt;/strong&gt;, &lt;strong&gt;DynamicContainer&lt;/strong&gt; and &lt;strong&gt;DynamicTest&lt;/strong&gt; classes are now added to &lt;strong&gt;Eclipse Favorites&lt;/strong&gt; by default&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;content assist favorites&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/content-assist-favorites.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;This allows you to quickly import the static methods from these classes in your code via Content Assist &lt;strong&gt;(Ctrl + Space)&lt;/strong&gt; and Quick Fix &lt;strong&gt;(Ctrl + 1)&lt;/strong&gt;.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;View all the failures from grouped assertions in the same &lt;strong&gt;Result Comparison&lt;/strong&gt; dialog opened from JUnit view&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;grouped assertions result comparison&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/grouped-assertions-result-comparison.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;View the number of disabled tests and tests with assumption failures on hover in JUnit view&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;skipped tests&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/skipped-tests.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;Use &lt;strong&gt;Go to File&lt;/strong&gt; action or just double-click to navigate to the test from JUnit view even when the test is displayed with a custom name&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;display name&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/display-name.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;(Re-)Run a single &lt;strong&gt;@Nested&lt;/strong&gt; test class by using the &lt;strong&gt;Run&lt;/strong&gt; action in JUnit view or Outline view. You can even right-click on a nested test class name in the editor and use the &lt;strong&gt;Run As&lt;/strong&gt; action&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;run nested class&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/run-nested-class.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;The &lt;strong&gt;Test Method Selection&lt;/strong&gt; dialog in JUnit launch configuration now shows the method parameter types also&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;test method selection dialog&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/test-method-selection-dialog.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;You can provide tags to be included in or excluded from a test run in the &lt;strong&gt;Configure Tags&lt;/strong&gt; dialog of JUnit launch configuration&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;junit tags&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/junit-tags.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;admonitionblock note&quot;&gt;
+      &lt;table&gt;
+      &lt;tbody&gt;&lt;tr&gt;
+      &lt;td class=&quot;icon&quot;&gt;
+      &lt;i class=&quot;fa icon-note&quot; title=&quot;Note&quot;&gt;&lt;/i&gt;
+      &lt;/td&gt;
+      &lt;td class=&quot;content&quot;&gt;
+      &lt;div class=&quot;ulist&quot;&gt;
+      &lt;ul&gt;
+      &lt;li&gt;
+      &lt;p&gt;If you are using an Eclipse workspace where you were running your JUnit 5 tests via @RunWith(JUnitPlatform.class) in Eclipse without JUnit 5 support then you
+      will have JUnit 4 as the test runner in their launch configurations. Before executing these tests in Eclipse with JUnit 5 support, you should either change their test
+      runner to JUnit 5 or delete them so that new launch configurations are created with JUnit 5 test runner while running the tests&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;/ul&gt;
+      &lt;/div&gt;
+      &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;/tbody&gt;&lt;/table&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;imageblock&quot;&gt;
+      &lt;div class=&quot;content&quot;&gt;
+      &lt;img alt=&quot;test runner update&quot; src=&quot;https://www.eclipse.org/eclipse/news/4.7.1a/images/test-runner-update.png&quot; /&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;We do not support running tests in a setup where an old Eclipse build (not having JUnit 5 support) is using a new Eclipse build (having JUnit 5 support)
+      as target. Also, developers who have the JDT JUnit runtime bundles (org.eclipse.jdt.junit.runtime, org.eclipse.jdt.junit4.runtime) checked out and pull
+      the latest changes will run into the above issue. You are expected to use a new Eclipse build for the development.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect2&quot;&gt;
+      &lt;h3 id=&quot;and-more&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#and-more&quot;&gt;&lt;/a&gt;And more…​&lt;/h3&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;You can find more noteworthy updates in on &lt;a href=&quot;https://tools.jboss.org/documentation/whatsnew/jbosstools/4.5.1.Final.html&quot;&gt;this page&lt;/a&gt;.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;sect1&quot;&gt;
+      &lt;h2 id=&quot;what-is-next&quot;&gt;&lt;a class=&quot;anchor&quot; href=&quot;http://tools.jboss.org/blog/news.atom#what-is-next&quot;&gt;&lt;/a&gt;What is next?&lt;/h2&gt;
+      &lt;div class=&quot;sectionbody&quot;&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Having JBoss Tools 4.5.1 and Developer Studio 11.1 out we are already working on the next maintenance release for Eclipse Oxygen.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Enjoy!&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paragraph&quot;&gt;
+      &lt;p&gt;Jeff Maury&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;&lt;/div&gt;</description>
+	<pubDate>Mon, 06 Nov 2017 11:31:13 +0000</pubDate>
+</item>
+
+</channel>
+</rss>

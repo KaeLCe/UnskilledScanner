@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xml:base="http://marketplace.eclipse.org/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Eclipse Plugins, Bundles and Products - Eclipse Marketplace</title>
+    <link>http://marketplace.eclipse.org/</link>
+    <description></description>
+    <language>en</language>
+     <atom:link href="http://marketplace.eclipse.org/rss.xml" rel="self" type="application/rss+xml" />
+      <item>
+    <title>anqu method</title>
+    <link>http://marketplace.eclipse.org/content/anqu-method</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/anqu_method_market_place_0.png&quot; width=&quot;110&quot; height=&quot;74&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Tue, 2015-02-10 03:41&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Sat, 2017-11-25 04:23&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22Mario%20V%C3%B6hl%22&quot;&gt;Mario Vöhl&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/mvoehl/listings&quot; title=&quot;Mario Voehl&quot;&gt;Mario Voehl&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;&lt;strong&gt;Never write glue code for @NamedQueries or @NamedNativeQueries yourself again. &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;The anqu method plug-in generates Java code to access @NamedQueries providing a compiler checked, typed, and implemented API for every @NamedQuery or @NamedNativeQuery in a few mouse clicks. JUnit tests can be generated as well to make sure the generated methods still fit the query.&lt;/p&gt;
+&lt;p&gt;This short (&amp;lt;80secs) &lt;a href=&quot;https://www.anqu.de/videos/anqu_auto_complete_demo.mp4&quot; target=&quot;_blank&quot; rel=&quot;nofollow&quot;&gt;video&lt;/a&gt; gives an impression.&lt;/p&gt;
+&lt;p&gt; &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;New with anqu 1.6.1: JPA 2.2 support&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;
+		&lt;strong&gt;Generation of getResultStream() code&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;
+		&lt;strong&gt;Repeatable annotation generation&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Other features:&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;
+		Creating the required annotation(s)&lt;/li&gt;
+&lt;li&gt;
+		Derive statements from query names - no need to write the query yourself in many cases!&lt;/li&gt;
+&lt;li&gt;
+		Generate methods with additional pagination parameters&lt;/li&gt;
+&lt;li&gt;
+		Creating Mock Utility classes for mockito unit testing&lt;/li&gt;
+&lt;li&gt;
+		Removing a query and the code generated from it&lt;/li&gt;
+&lt;li&gt;
+		Code generation for Spring Data JPA and Apache DeltaSpike Data&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Tue, 10 Feb 2015 08:41:08 +0000</pubDate>
+ <dc:creator>mvoehl</dc:creator>
+ <guid isPermaLink="false">2184088 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/anqu-method#comments</comments>
+  </item>
+  <item>
+    <title>Eclipse IDE Integration for ALM Octane</title>
+    <link>http://marketplace.eclipse.org/content/eclipse-ide-integration-alm-octane</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/almoctane.png&quot; width=&quot;110&quot; height=&quot;80&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Wed, 2017-07-05 07:55&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Fri, 2017-11-24 10:28&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22HPE%20Software%22&quot;&gt;HPE Software&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/atothnvp/listings&quot; title=&quot;Andras Toth&quot;&gt;Andras Toth&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;&lt;strong&gt;Eclipse IDE Integration for ALM Octane&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Compatible with ALM Octane version 12.55.4 and above.&lt;/p&gt;
+&lt;p&gt;Allows you to manage your backlog items directly from you IDE.&lt;/p&gt;
+&lt;p&gt;Certain versions of software and/or documents (&quot;Material&quot;) accessible here may contain branding from Hewlett-Packard Company (now HP Inc.) and Hewlett Packard Enterprise Company.  As of September 1, 2017, the Material is now offered by Micro Focus, a separately owned and operated company.  Any reference to the HP and Hewlett Packard Enterprise/HPE marks is historical in nature, and the HP and Hewlett Packard Enterprise/HPE marks are the property of their respective owners.&lt;/p&gt;
+&lt;p&gt;This project is open-source, if you wish to contribute, please visit: &lt;a href=&quot;https://github.com/HPSoftware/octane-eclipse-plugin&quot; rel=&quot;nofollow&quot;&gt;https://github.com/HPSoftware/octane-eclipse-plugin&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Wed, 05 Jul 2017 11:55:12 +0000</pubDate>
+ <dc:creator>atothnvp</dc:creator>
+ <guid isPermaLink="false">3528014 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/eclipse-ide-integration-alm-octane#comments</comments>
+  </item>
+  <item>
+    <title>IBM WebSphere Application Server Liberty Developer Tools Beta</title>
+    <link>http://marketplace.eclipse.org/content/ibm-websphere-application-server-liberty-developer-tools-beta</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/wdt-was-lp-500.png&quot; width=&quot;80&quot; height=&quot;80&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Thu, 2013-10-31 15:13&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Fri, 2017-11-24 10:10&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22IBM%22&quot;&gt;IBM&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/canderson/listings&quot; title=&quot;Carl Anderson&quot;&gt;Carl Anderson&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;*Beta* An Eclipse 4.x IDE for building and deploying Java EE, OSGi and Web 2.0 applications to WebSphere Application Server Liberty v9 Beta with Java EE 7. For more information about installing and downloading the tools, including archived versions of the tools for older versions of Eclipse, see &lt;a href=&quot;https://developer.ibm.com/wasdev/docs/websphere-developer-tools-releases/&quot; rel=&quot;nofollow&quot;&gt;WebSphere Application Server Developer Tools Releases&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Thu, 31 Oct 2013 19:13:37 +0000</pubDate>
+ <dc:creator>canderson</dc:creator>
+ <guid isPermaLink="false">1280744 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/ibm-websphere-application-server-liberty-developer-tools-beta#comments</comments>
+  </item>
+  <item>
+    <title>Batch Editor</title>
+    <link>http://marketplace.eclipse.org/content/batch-editor</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/batch-editor-logo.png&quot; width=&quot;110&quot; height=&quot;80&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Thu, 2017-11-23 19:12&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Fri, 2017-11-24 09:02&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22Albert%20Tregnaghi%22&quot;&gt;Albert Tregnaghi&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/atregnaghi/listings&quot; title=&quot;Albert Tregnaghi&quot;&gt;Albert Tregnaghi&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;This plugin is a batch file editor. &lt;/p&gt;
+&lt;p&gt;Features:&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;
+		Syntax highlighting&lt;/li&gt;
+&lt;li&gt;
+		Outline&lt;/li&gt;
+&lt;li&gt;
+		Quick-Outline (CTRL + o )&lt;/li&gt;
+&lt;li&gt;
+		Open referenced labels by hyperlink&lt;/li&gt;
+&lt;li&gt;
+		Simple code completion (keywords + existing words)&lt;/li&gt;
+&lt;li&gt;
+		Colors can be customized. Also additional defaults for dark theme exists.&lt;/li&gt;
+&lt;li&gt;
+		Bracket switching + highlighting&lt;/li&gt;
+&lt;li&gt;
+		Block commenting (CTRL+7)&lt;/li&gt;
+&lt;li&gt;
+		Auto bracket closing for []&lt;/li&gt;
+&lt;li&gt;
+		Small (&amp;lt;200 kb)&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Additional links&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;
+		&lt;a href=&quot;https://github.com/de-jcup/eclipse-batch-editor/issues&quot; rel=&quot;nofollow&quot;&gt;Issue Tracker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+		&lt;a href=&quot;https://github.com/de-jcup/eclipse-batch-editor/releases&quot; rel=&quot;nofollow&quot;&gt;Release history&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+		&lt;a href=&quot;https://github.com/de-jcup/eclipse-batch-editor/wiki&quot; rel=&quot;nofollow&quot;&gt;Wiki&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Fri, 24 Nov 2017 00:12:18 +0000</pubDate>
+ <dc:creator>atregnaghi</dc:creator>
+ <guid isPermaLink="false">3786618 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/batch-editor#comments</comments>
+  </item>
+  <item>
+    <title>WireframeSketcher Wireframing Tool</title>
+    <link>http://marketplace.eclipse.org/content/wireframesketcher-wireframing-tool</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/sketch_80.png&quot; width=&quot;110&quot; height=&quot;80&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Mon, 2008-11-03 09:15&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Thu, 2017-11-23 09:51&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22WireframeSketcher%22&quot;&gt;WireframeSketcher&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/pseverinqw0/listings&quot; title=&quot;Peter Severin&quot;&gt;Peter Severin&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;WireframeSketcher is a rapid wireframing tool that helps quickly create wireframes, mockups and prototypes for desktop, web and mobile applications. It comes both as a plug-in for any Eclipse IDE and a standalone version. With WireframeSketcher users can quickly gather useful feedback from stakeholders, show off their proposals to clients, share their ideas with fellow developers and in the end build better software. Install the 14 days free trial and test it for yourself.&lt;/p&gt;
+&lt;h3&gt;
+	Some of the top features:&lt;/h3&gt;
+&lt;ul&gt;&lt;li&gt;
+		Extensive library of built-in controls for any type of UI. Stencils for Android, iPhone, iPad apps and more are available.&lt;/li&gt;
+&lt;li&gt;
+		Hand-drawn look for wireframes. Your stakeholders won&#039;t be distracted by little details and you can focus on what’s important. Clean look is also available.&lt;/li&gt;
+&lt;li&gt;
+		Create interactive prototypes. Present your prototypes in full-screen mode and click-through to show how the application or website is supposed work. Export your prototypes to clickable, high-quality PDF, or easily share them online in a few clicks.&lt;/li&gt;
+&lt;li&gt;
+		More than 200 wireframing icons. Icons come in vector format, work at any size, can be colored, rotated, and embedded in any text.&lt;/li&gt;
+&lt;li&gt;
+		Use components to create your own reusable bits. Easy inheritance mechanism lets you modify component&#039;s instance without breaking the link to its origin.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;Download standalone version from our website: &lt;a href=&quot;http://wireframesketcher.com/download.html&quot; rel=&quot;nofollow&quot;&gt;http://wireframesketcher.com/download.html&lt;/a&gt;. &lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Mon, 03 Nov 2008 14:15:53 +0000</pubDate>
+ <dc:creator>pseverinqw0</dc:creator>
+ <guid isPermaLink="false">801 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/wireframesketcher-wireframing-tool#comments</comments>
+  </item>
+  <item>
+    <title>impulse HDL Extension</title>
+    <link>http://marketplace.eclipse.org/content/impulse-hdl-extension</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/impulse110_80_1.png&quot; width=&quot;110&quot; height=&quot;80&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Fri, 2015-02-20 04:44&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Thu, 2017-11-23 03:27&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22toem%20GmbH%22&quot;&gt;toem GmbH&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/thaberm7n/listings&quot; title=&quot;Thomas Haber&quot;&gt;Thomas Haber&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;A hardware description language (HDL) is a specialized computer language used to describe the structure and behavior of electronic circuits, and most commonly, digital logic circuits. Probably the best known digital simulators are those based on Verilog and VHDL.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://toem.de/index.php/projects/impulse&quot; rel=&quot;nofollow&quot;&gt;impulse&lt;/a&gt; is a powerful waveform viewer and analyser tool, helping engineers to comfortably understand and debug complex semiconductor and multi-core software systems.&lt;/p&gt;
+&lt;p&gt;There are a number of HDL related file formats supported with&lt;a href=&quot;http://toem.de/index.php/projects/impulse-hdl&quot; rel=&quot;nofollow&quot;&gt; this extension&lt;/a&gt; to read, display and analyze the simulation output. FSDB, FST and WLF are supported using native extensions (FSDB and WLF require 3rd party libraries), wheras eVCD, VZT and LXT2 require an external vcd conversion tool. VCD and analouge tabular files are supported by the core features of impulse.&lt;/p&gt;
+&lt;p&gt;Additionally you find a SCV reader for &lt;strong&gt;TLM (System-C TLM-2)&lt;/strong&gt; transaction tracing. impulse allows you to visualize using association curves your transactions including navigation buttons.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Fri, 20 Feb 2015 09:44:36 +0000</pubDate>
+ <dc:creator>thaberm7n</dc:creator>
+ <guid isPermaLink="false">2200290 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/impulse-hdl-extension#comments</comments>
+  </item>
+  <item>
+    <title>The Arduino Eclipse IDE named Sloeber (Product)</title>
+    <link>http://marketplace.eclipse.org/content/arduino-eclipse-ide-named-sloeber-product</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/logo_256.png&quot; width=&quot;80&quot; height=&quot;80&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Mon, 2015-12-07 15:29&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Wed, 2017-11-22 17:10&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22jantje%20and%20others%22&quot;&gt;jantje and others&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/jbaeyens/listings&quot; title=&quot;jan baeyens&quot;&gt;jan baeyens&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;This product allows you to &lt;strong&gt;create&lt;/strong&gt;, &lt;strong&gt;compile&lt;/strong&gt; and &lt;strong&gt;upload &lt;/strong&gt;sketches with nearly the same simplicity as the Arduino IDE but with all full functional features one would expect from a professional IDE and includes a &lt;strong&gt;serial monitor&lt;/strong&gt; and a &lt;strong&gt;graphical scope&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;This is a free and open-source plugin that is a professional and complete alternative to the Arduino IDE. This is an add-on to the CDT plugin and as such has all C/C++ development features plus a toolbar with the Arduino buttons from the Arduino IDE and an Arduino menu for importing libraries and more. There is no dependency on the Arduino IDE. From V4 onwards 200+ boards are supported. Note: There is also a plugin available here on the marketplace which should be installed by hardcode CDT users.&lt;/p&gt;
+&lt;p&gt;Beginners are advised to install this stable product.&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;
+		Linux download page &lt;a href=&quot;http://sloeber.io/stable.php?OS=Linux&quot; rel=&quot;nofollow&quot;&gt;http://sloeber.io/stable.php?OS=Linux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+		Mac download page &lt;a href=&quot;http://sloeber.io/stable.php?OS=MacOS&quot; rel=&quot;nofollow&quot;&gt;http://sloeber.io/stable.php?OS=MacOS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+		Windows download page &lt;a href=&quot;http://sloeber.io/stable.php?OS=Windows&quot; rel=&quot;nofollow&quot;&gt;http://sloeber.io/stable.php?OS=Windows&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Mon, 07 Dec 2015 20:29:50 +0000</pubDate>
+ <dc:creator>jbaeyens</dc:creator>
+ <guid isPermaLink="false">2637354 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/arduino-eclipse-ide-named-sloeber-product#comments</comments>
+  </item>
+  <item>
+    <title>The Arduino Eclipse plugin named Sloeber</title>
+    <link>http://marketplace.eclipse.org/content/arduino-eclipse-plugin-named-sloeber</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/splash_1.png&quot; width=&quot;110&quot; height=&quot;80&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Mon, 2014-02-03 09:42&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Wed, 2017-11-22 17:03&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22jantje%20and%20others%22&quot;&gt;jantje and others&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/jbaeyens/listings&quot; title=&quot;jan baeyens&quot;&gt;jan baeyens&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;This plugin allows you to &lt;strong&gt;create&lt;/strong&gt;, &lt;strong&gt;compile&lt;/strong&gt; and &lt;strong&gt;upload &lt;/strong&gt;sketches with nearly the same simplicity as the Arduino IDE but with all full functional features one would expect from a professional IDE and includes a &lt;strong&gt;serial monitor&lt;/strong&gt; and a &lt;strong&gt;graphical scope&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;This is a free and open-source plugin that is a professional and complete alternative to the Arduino IDE. This is an add-on to the CDT plugin and as such has all C/C++ development features plus a toolbar with the Arduino buttons from the Arduino IDE and an Arduino menu for importing libraries and more. There is no dependency on the Arduino IDE. From V4 onwards 200+ boards are supported. Note: This is the plugin which should be installed by hardcode CDT users.This solution is also available as a product on the marketplace.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Beginners are advised to install the product.&lt;/strong&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Mon, 03 Feb 2014 14:42:28 +0000</pubDate>
+ <dc:creator>jbaeyens</dc:creator>
+ <guid isPermaLink="false">1465503 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/arduino-eclipse-plugin-named-sloeber#comments</comments>
+  </item>
+  <item>
+    <title>jSparrow - Automatical Java Code Improvement</title>
+    <link>http://marketplace.eclipse.org/content/jsparrow-automatical-java-code-improvement</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/jSparrow_Fluegel_110x80.jpg&quot; width=&quot;110&quot; height=&quot;77&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Tue, 2017-06-20 11:34&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Wed, 2017-11-22 10:34&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22Splendit%20IT-Consulting%20GmbH%22&quot;&gt;Splendit IT-Consulting GmbH&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/mprehofer/listings&quot; title=&quot;Michaela Prehofer&quot;&gt;Michaela Prehofer&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;&lt;strong&gt;jSparrow &lt;/strong&gt;is an automated Eclipse PlugIn, which finds and replaces different kinds of threats in Java sources with a rule based approach. It improves your Java code and &lt;strong&gt;transforms &lt;/strong&gt;it to Java 7/8.&lt;/p&gt;
+&lt;p&gt;
+	jSparrow has a set of &lt;strong&gt;44 rules &lt;/strong&gt;now, which are grouped into seven categories (see rule matrix in our screenshots):&lt;br /&gt;
+	    • String manipulation&lt;br /&gt;
+	    • Formatting&lt;br /&gt;
+	    • Coding Convention&lt;br /&gt;
+	    • Performance&lt;br /&gt;
+	    • Readability&lt;br /&gt;
+	    • Old language constructs&lt;br /&gt;
+	    • Lambda&lt;br /&gt;
+	    • Logging&lt;/p&gt;
+&lt;p&gt;
+	&lt;strong&gt;Removal &lt;/strong&gt;of potential &lt;strong&gt;bugs and code smells&lt;/strong&gt; is one of the main purposes of jSparrow. jSparrow is very efficient in disposing of these threats with its rules. You can group the profiles into individual &lt;strong&gt;rule profiles&lt;/strong&gt;, which also can be &lt;strong&gt;exported &lt;/strong&gt;and &lt;strong&gt;imported &lt;/strong&gt;to share them within your development team.&lt;/p&gt;
+&lt;p&gt;
+	Being up to date with the latest Java standards is requiring a lot of software maintenance work. &lt;strong&gt;jSparrow upgrades &lt;/strong&gt;old code-artifacts to new state-of-the-art programming practices. The usage of jSparrow´s &lt;strong&gt;full version&lt;/strong&gt; allows you to save a lot of valuable time, while offering the option of &lt;strong&gt;automatically upgrading&lt;/strong&gt; to the latest version of Java within minutes in a safe way.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;jSparrow &lt;/strong&gt;improved his Preview Wizard and the Summary Page. It now &lt;strong&gt;estimates &lt;/strong&gt;the&lt;strong&gt; time to fix issues&lt;/strong&gt; manually. The preview wizard shows the number of issues fixed and estimates your &lt;strong&gt;saved time&lt;/strong&gt;. (see screenshots or our release notes: &lt;a href=&quot;https://jsparrow.eu/changelog/&quot; rel=&quot;nofollow&quot;&gt;https://jsparrow.eu/changelog/&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Once you installed jSparrow in your Eclipse – you will SAVE MONEY &amp;amp; TIME in modernizing your Java sources.&lt;strong&gt; &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;LATEST VERSION:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;jSparrow Release 2.3.0&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OUR RELEASE POLICY IS AS FOLLOWS:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Two major releases&lt;/strong&gt; per year&lt;/p&gt;
+&lt;p&gt;    21st June – Midsummer Release&lt;br /&gt;
+	    21st December – Release of the longest night&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Monthly Rule releases&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;If we developed new rules, they will be released on the 21st of each month - (if the 21st isn’t an Austrian working day- the release will be postponed one month)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Weekly Bugfix &lt;/strong&gt;releases&lt;/p&gt;
+&lt;p&gt;Bugfixes will be released each Tuesday&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Hotfix Releases &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Hotfix Releases can be deployed any time (hopefully not necessary)&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Tue, 20 Jun 2017 15:34:11 +0000</pubDate>
+ <dc:creator>mprehofer</dc:creator>
+ <guid isPermaLink="false">3503691 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/jsparrow-automatical-java-code-improvement#comments</comments>
+  </item>
+  <item>
+    <title>SonarLint</title>
+    <link>http://marketplace.eclipse.org/content/sonarlint</link>
+    <description>&lt;div class=&quot;field field-name-field-resource-image field-type-image field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;img class=&quot;img-responsive&quot; src=&quot;http://marketplace.eclipse.org/sites/default/files/sonarlint-110x80_0.png&quot; width=&quot;110&quot; height=&quot;80&quot; alt=&quot;&quot; /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-created field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Created:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Thu, 2015-10-15 14:54&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-shared-date-updated field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Date Updated:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;Tue, 2017-11-21 10:20&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;a href=&quot;/search/content/%22SonarSource%20S.A%22&quot;&gt;SonarSource S.A&lt;/a&gt;&lt;div class=&quot;field field-name-shared-submitted-by field-type-text field-label-inline clearfix&quot;&gt;&lt;div class=&quot;field-label&quot;&gt;Submitted by:&amp;nbsp;&lt;/div&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;a href=&quot;/user/jhenrym6y/listings&quot; title=&quot;Julien HENRY&quot;&gt;Julien HENRY&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_start --&gt;&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot;&gt;&lt;p&gt;SonarLint is an Eclipse plugin that provides on-the-fly feedback to developers on new bugs and quality issues injected into Java, JavaScript, Python and PHP code. If your project is analysed on SonarQube (formerly known as &quot;Sonar&quot;), SonarLint can connect to the server to retrieve the appropriate quality profiles and settings for that project. Documentation: &lt;a href=&quot;http://eclipse.sonarlint.org/&quot; rel=&quot;nofollow&quot;&gt;http://eclipse.sonarlint.org/&lt;/a&gt; For any question or feedback please join the &lt;a href=&quot;https://groups.google.com/forum/#!forum/sonarlint&quot; rel=&quot;nofollow&quot;&gt;SonarLint User group&lt;/a&gt; Running Eclipse Kepler SR1+ with a JDK 8+ is required since version 2.2.0.&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;!-- google_ad_section_end --&gt;</description>
+     <pubDate>Thu, 15 Oct 2015 18:54:47 +0000</pubDate>
+ <dc:creator>jhenrym6y</dc:creator>
+ <guid isPermaLink="false">2568658 at http://marketplace.eclipse.org</guid>
+ <comments>http://marketplace.eclipse.org/content/sonarlint#comments</comments>
+  </item>
+  </channel>
+</rss>

@@ -1,0 +1,9 @@
+package portscanner.scanner;
+
+public class Scanner {
+
+	Scanner() {
+		
+	}
+	
+}

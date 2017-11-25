@@ -1,0 +1,57 @@
+package portscanner.ui;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.Scanner;
+
+import portscanner.scanner.ScannerPort;
+
+public class Interface {
+
+	private Scanner reader;
+	private ScannerPort scanner;
+	
+	public Interface(){
+		this.reader = new Scanner(System.in);
+		this.scanner = new ScannerPort();
+	}
+	
+	public void start() {
+		System.out.println("**************************");
+		System.out.println("**   Scanner de ports   **");
+		System.out.println("**************************");
+		System.out.println("MENU, select return liked");
+		System.out.println("-----------------------------------------------------");
+		System.out.println(" Open Ports List  #  Port Streaming  #  TCP Try Out");
+		System.out.println("-----------------------------------------------------");
+		System.out.println("|        1        |        2         |       3       |");
+		System.out.println();
+		System.out.print("Select you choice: ");
+		int choice = Integer.parseInt(reader.nextLine());
+		
+		if(choice == 1) {
+			openPortsList();
+		}
+		
+	}
+	
+	public void openPortsList() {
+		System.out.print("IP address target: ");
+		String address = reader.nextLine();
+		System.out.print("Begin at port: ");
+		int portDeb = Integer.parseInt(reader.nextLine());
+		System.out.print("End at port: ");
+		int portFin = Integer.parseInt(reader.nextLine());
+		this.scanner.scan(address, portDeb, portFin);
+	}
+	
+    public void checkIPFormat(String iproot) {
+        String[] nip = iproot.split("\.");
+        if (nip.length != 4) {
+            System.out.println("Base Ip incorrecte !!! exemple 192.168.1.1");
+            return;
+        }
+    }
+	
+}

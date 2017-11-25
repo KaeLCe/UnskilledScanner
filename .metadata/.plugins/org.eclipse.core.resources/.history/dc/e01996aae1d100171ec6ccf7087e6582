@@ -1,0 +1,26 @@
+package portscanner.ui;
+
+import java.util.Scanner;
+
+public class Interface {
+
+	private Scanner reader;
+	
+	Interface(){
+		this.reader = new Scanner(System.in);
+	}
+	
+	public void start() {
+		System.out.println("**************************");
+		System.out.println("**   Scanner de ports   **");
+		System.out.println("**************************");
+		System.out.println("MENU, select return liked");
+		System.out.println("---------------------------------------------");
+		System.out.println(" Open Ports # Port Streaming # TCP Try Out");
+		System.out.println("---------------------------------------------");
+		System.out.println("|     1     |        2       |       3      |");
+		System.out.println();
+		System.out.println("Select you choice: ");
+	}
+	
+}
